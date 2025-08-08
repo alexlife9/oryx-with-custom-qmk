@@ -596,7 +596,7 @@ bool lang_shift_process_english_modifiers(Key key, keyrecord_t* record) {
         lang_stack[modifiers_count] = lang_should_be; \
         modifiers_count += 1; \
         if (lang_should_be == 1) { \
-          layer_off(2); \
+          layer_off(1); \
         } \
         if (ACTIVATE_LANG) { \
           lang_activate_from_user(0); \
@@ -613,7 +613,7 @@ bool lang_shift_process_english_modifiers(Key key, keyrecord_t* record) {
           lang_activate_from_user_without_sync(lang_stack[modifiers_count]); \
         } \
         if (lang_should_be == 1) { \
-          layer_on(2); \
+          layer_on(1); \
         } \
       } \
       return false; \

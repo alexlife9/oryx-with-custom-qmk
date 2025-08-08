@@ -36,17 +36,17 @@ enum tap_dance_codes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_moonlander(
-    KC_ESCAPE,      KC_HASH,        KC_TRANSPARENT, KC_EXLM,        KC_RABK,        KC_AT,          KC_DELETE,                                      KC_DQUO,        KC_PERC,        KC_DLR,         KC_QUES,        KC_UNDS,        KC_AMPR,        KC_PSCR,        
+    KC_ESCAPE,      KC_HASH,        AG_LT,          KC_EXLM,        KC_RABK,        KC_AT,          KC_DELETE,                                      KC_DQUO,        KC_PERC,        KC_DLR,         KC_QUES,        KC_UNDS,        KC_AMPR,        KC_PSCR,        
     KC_TAB,         RU_SHTI,        RU_TSE,         RU_U,           RU_KA,          RU_IE,          KC_LPRN,                                        KC_RPRN,        RU_EN,          RU_GHE,         TD(DANCE_1),    RU_ZE,          RU_E,           RU_YO,          
-    KC_SCLN,        RU_EF,          RU_YERU,        RU_VE,          RU_A,           RU_PE,          KC_COMMA,                                                                       KC_DOT,         RU_ER,          RU_O,           RU_EL,          RU_DE,          RU_ZHE,         KC_COLN,        
+    KC_SCLN,        RU_EF,          RU_YERU,        RU_VE,          RU_A,           RU_PE,          AG_COMM,                                                                       KC_DOT,         RU_ER,          RU_O,           RU_EL,          RU_DE,          RU_ZHE,         KC_COLN,        
     KC_TRANSPARENT, RU_YA,          RU_CHE,         RU_ES,          RU_M,           RU_I,                                           RU_TE,          TD(DANCE_2),    RU_BE,          RU_HA,          RU_YU,          KC_TRANSPARENT, 
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_LEFT_GUI,    KC_EQUAL,       KC_ENTER,                                                                                                       KC_BSPC,        KC_KP_SLASH,    KC_KP_ASTERISK, KC_KP_MINUS,    KC_KP_PLUS,     TO(1),          
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_LEFT_GUI,    KC_EQUAL,       KC_ENTER,                                                                                                       KC_BSPC,        KC_KP_SLASH,    KC_KP_ASTERISK, KC_KP_MINUS,    KC_KP_PLUS,     LA_CHNG,          
     TD(DANCE_0),    KC_LEFT_CTRL,   TT(2),                          TT(3),          TT(4),          KC_SPACE
   ),
   [1] = LAYOUT_moonlander(
-    KC_ESCAPE,      KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
+    KC_ESCAPE,      KC_TRANSPARENT, AG_LT,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_Q,           KC_W,           KC_U,           KC_K,           KC_E,           KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_N,           KC_G,           KC_Y,           KC_NO,          KC_NO,          KC_NO,          
-    KC_TRANSPARENT, KC_F,           KC_S,           KC_V,           KC_A,           KC_P,           KC_TRANSPARENT,                                                                 KC_TRANSPARENT, KC_R,           KC_O,           KC_L,           KC_D,           KC_NO,          KC_TRANSPARENT, 
+    KC_TRANSPARENT, KC_F,           KC_S,           KC_V,           KC_A,           KC_P,           AG_COMM,                                                                 KC_TRANSPARENT, KC_R,           KC_O,           KC_L,           KC_D,           KC_NO,          KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_Z,           KC_H,           KC_C,           KC_M,           KC_I,                                           KC_T,           KC_J,           KC_B,           KC_X,           KC_NO,          KC_TRANSPARENT, 
     TO(0),          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
