@@ -36,9 +36,9 @@ enum tap_dance_codes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_moonlander(
-    KC_ESCAPE,      KC_HASH,        AG_LT,          KC_EXLM,        KC_RABK,        KC_AT,          KC_DELETE,                                      KC_DQUO,        KC_PERC,        KC_DLR,         KC_QUES,        KC_UNDS,        KC_AMPR,        KC_PSCR,        
+    KC_ESCAPE,      KC_HASH,        KS_LT,          KC_EXLM,        KC_RABK,        KC_AT,          KC_DELETE,                                      KC_DQUO,        KC_PERC,        KC_DLR,         KC_QUES,        KC_UNDS,        KC_AMPR,        KC_PSCR,        
     KC_TAB,         RU_SHTI,        RU_TSE,         RU_U,           RU_KA,          RU_IE,          KC_LPRN,                                        KC_RPRN,        RU_EN,          RU_GHE,         TD(DANCE_1),    RU_ZE,          RU_E,           RU_YO,          
-    KC_SCLN,        RU_EF,          RU_YERU,        RU_VE,          RU_A,           RU_PE,          AG_COMM,                                                                       KC_DOT,         RU_ER,          RU_O,           RU_EL,          RU_DE,          RU_ZHE,         KC_COLN,        
+    KC_SCLN,        RU_EF,          RU_YERU,        RU_VE,          RU_A,           RU_PE,          KS_COMM,                                                                       KC_DOT,         RU_ER,          RU_O,           RU_EL,          RU_DE,          RU_ZHE,         KC_COLN,        
     KC_TRANSPARENT, RU_YA,          RU_CHE,         RU_ES,          RU_M,           RU_I,                                           RU_TE,          TD(DANCE_2),    RU_BE,          RU_HA,          RU_YU,          KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_LEFT_GUI,    KC_EQUAL,       KC_ENTER,                                                                                                       KC_BSPC,        KC_KP_SLASH,    KC_KP_ASTERISK, KC_KP_MINUS,    KC_KP_PLUS,     LA_CHNG,          
     TD(DANCE_0),    KC_LEFT_CTRL,   TT(2),                          TT(3),          TT(4),          KC_SPACE
