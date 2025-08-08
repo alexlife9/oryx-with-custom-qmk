@@ -513,12 +513,12 @@ bool lang_shift_process_custom_keycodes(Key key, keyrecord_t* record) {
       return false;
     case LA_CHNG:
       if (down) {
-        if (lang_should_be == 0) {
-          lang_activate_from_user(1);
-          layer_on(2);  
-        } else {
-          lang_activate_from_user(0);
-          layer_off(2);
+        if (lang_should_be == 0) {       // Если текущий язык - русский (0)
+          lang_activate_from_user(1);    // Активируем английский язык(1)
+          layer_on(1);                   // И переключаемся на СЛОЙ 1 (английский)
+        } else {                         // Иначе (если текущий - английский)
+          lang_activate_from_user(0);    // Активируем русский (0)
+          layer_off(1);                  // И выключаем СЛОЙ 1, возвращаясь на базовый (0)
         }
       }
       return false;
