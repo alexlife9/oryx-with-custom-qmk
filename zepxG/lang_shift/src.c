@@ -1,32 +1,3 @@
-// --- НАЧАЛО БЛОКА ДЛЯ SRC.C (В САМОМ ВЕРХУ ФАЙЛА) ---
-
-// ОПРЕДЕЛЕНИЕ (реализация) вспомогательной функции для регистрации модов.
-void _register_mod(uint8_t mod_name) {
-    if (mod_name == CTRL) {
-        register_code(KC_LCTL);
-    } else if (mod_name == SHIFT) {
-        register_code(KC_LSFT);
-    } else if (mod_name == ALT) {
-        register_code(KC_LALT);
-    } else if (mod_name == GUI) {
-        register_code(KC_LGUI);
-    }
-}
-
-void _unregister_mod(uint8_t mod_name) {
-    if (mod_name == CTRL) {
-        unregister_code(KC_LCTL);
-    } else if (mod_name == SHIFT) {
-        unregister_code(KC_LSFT);
-    } else if (mod_name == ALT) {
-        unregister_code(KC_LALT);
-    } else if (mod_name == GUI) {
-        unregister_code(KC_LGUI);
-    }
-}
-// --- КОНЕЦ БЛОКА ДЛЯ SRC.C ---
-
-
 // ---------------------------------------------------------------------------
 //                               Работа с шифтом
 // ---------------------------------------------------------------------------
@@ -648,8 +619,8 @@ bool lang_shift_process_english_modifiers(Key key, keyrecord_t* record) {
       return false; \
     } break;
 
-  //#define Rg(x) register_code(KC_L ## x)
-  //#define Un(x) unregister_code(KC_L ## x)
+  #define Rg(x) register_code(KC_L##x)
+  #define Un(x) unregister_code(KC_L##x)
 
   switch (key) {
     PROCESS(CTRL_0, Rg(CTRL), Un(CTRL), false);

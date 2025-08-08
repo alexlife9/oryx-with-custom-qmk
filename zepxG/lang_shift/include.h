@@ -4,42 +4,6 @@
   #error "You must specify variable CUSTOM_SAFE_RANGE for lang_shift extension."
 #endif
 
-      
-// ... (в начале файла #pragma once и проверка CUSTOM_SAFE_RANGE остаются) ...
-
-// --- НАЧАЛО БЛОКА ДЛЯ ПЕРЕНОСА ---
-
-      
-// Определяем простые имена для проверки модификаторов.
-// Это не битовые маски, а просто константы.
-#define CTRL  1
-#define SHIFT 2
-#define ALT   3
-#define GUI   4
-
-    
-
-// Определяем макросы для проверки, зажат ли какой-либо из модификаторов
-#define CTRL    (get_mods() & CTRL_0)
-#define SHIFT   (get_mods() & SHIFT_0)
-#define ALT     (get_mods() & ALT_0)
-#define GUI     (get_mods() & GUI_0)
-
-// Новые макросы Rg и Un, которые вызывают наши функции
-#define Rg(mod) _register_mod(mod)
-#define Un(mod) _unregister_mod(mod)
-
-// ОБЪЯВЛЕНИЯ (прототипы) наших вспомогательных функций.
-// Мы говорим компилятору: "такие функции существуют, их код ты найдешь где-то еще".
-void _register_mod(uint8_t mod_name);
-void _unregister_mod(uint8_t mod_name);
-
-// --- КОНЕЦ БЛОКА ДЛЯ ПЕРЕНОСА ---
-
-// ... (дальше идет enum lang_shift_keycodes и все остальное) ...
-
-    
-
 enum lang_shift_keycodes {
 	LANG_SHIFT_START = CUSTOM_SAFE_RANGE,
 
