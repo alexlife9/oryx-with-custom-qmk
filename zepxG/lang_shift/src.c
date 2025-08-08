@@ -13,7 +13,6 @@ void _register_mod(uint8_t mod_name) {
     }
 }
 
-// ОПРЕДЕЛЕНИЕ вспомогательной функции для отмены регистрации модов.
 void _unregister_mod(uint8_t mod_name) {
     if (mod_name == CTRL) {
         unregister_code(KC_LCTL);

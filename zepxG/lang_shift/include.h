@@ -9,11 +9,15 @@
 
 // --- НАЧАЛО БЛОКА ДЛЯ ПЕРЕНОСА ---
 
-// Определяем простые имена для битовых масок модификаторов
-#define CTRL_0  (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL))
-#define SHIFT_0 (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT))
-#define ALT_0   (MOD_BIT(KC_LALT) | MOD_BIT(KC_RALT))
-#define GUI_0   (MOD_BIT(KC_LGUI) | MOD_BIT(KC_RGUI))
+      
+// Определяем простые имена для проверки модификаторов.
+// Это не битовые маски, а просто константы.
+#define CTRL  1
+#define SHIFT 2
+#define ALT   3
+#define GUI   4
+
+    
 
 // Определяем макросы для проверки, зажат ли какой-либо из модификаторов
 #define CTRL    (get_mods() & CTRL_0)
