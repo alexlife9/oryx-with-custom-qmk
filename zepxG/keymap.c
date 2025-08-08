@@ -4,12 +4,12 @@
 #include "i18n.h"
 #define MOON_LED_LEVEL LED_LEVEL
 #define CUSTOM_SAFE_RANGE ML_SAFE_RANGE
-#ifndef ZSA_SAFE_RANGE
-#define ZSA_SAFE_RANGE SAFE_RANGE
-#endif
+//#ifndef ZSA_SAFE_RANGE
+//#define ZSA_SAFE_RANGE SAFE_RANGE
+//#endif
 
 enum custom_keycodes {
-  RGB_SLD = ZSA_SAFE_RANGE,
+  RGB_SLD = CUSTOM_SAFE_RANGE,
   ST_MACRO_0,
   ST_MACRO_1,
 };
