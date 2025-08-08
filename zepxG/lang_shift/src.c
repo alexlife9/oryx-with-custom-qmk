@@ -623,21 +623,21 @@ bool lang_shift_process_english_modifiers(Key key, keyrecord_t* record) {
   #define Un(x) unregister_code(KC_L##x)
 
   switch (key) {
-    PROCESS(CTRL_0, Rg(CTRL), Un(CTRL), false);
+    PROCESS(CTRL_0, Rg(CTL), Un(CTL), false);
     PROCESS(ALT_0,  Rg(ALT),  Un(ALT), false);
     PROCESS(WIN_0,  Rg(GUI),  Un(GUI), false);
-    PROCESS(CTAL_0, { Rg(CTRL);  Rg(ALT);   }, { Un(ALT);   Un(CTRL);  }, false);
-    PROCESS(SHAL_0, { Rg(SHIFT); Rg(ALT);   }, { Un(ALT);   Un(SHIFT); }, false);
-    PROCESS(CTSH_0, { Rg(CTRL);  Rg(SHIFT); }, { Un(SHIFT); Un(CTRL);  }, false);
-    PROCESS(MCAS_0, { Rg(CTRL);  Rg(ALT); Rg(SHIFT); }, { Un(SHIFT); Un(ALT); Un(CTRL); }, false);
+    PROCESS(CTAL_0, { Rg(CTL);  Rg(ALT);   }, { Un(ALT);   Un(CTL);  }, false);
+    PROCESS(SHAL_0, { Rg(SFT); Rg(ALT);   }, { Un(ALT);   Un(SFT); }, false);
+    PROCESS(CTSH_0, { Rg(CTL);  Rg(SFT); }, { Un(SFT); Un(CTL);  }, false);
+    PROCESS(MCAS_0, { Rg(CTL);  Rg(ALT); Rg(SFT); }, { Un(SFT); Un(ALT); Un(CTL); }, false);
 
-    PROCESS(CTRL_EN, Rg(CTRL), Un(CTRL), true);
+    PROCESS(CTRL_EN, Rg(CTL), Un(CTL), true);
     PROCESS(ALT_EN,  Rg(ALT),  Un(ALT), true);
     PROCESS(WIN_EN,  Rg(GUI),  Un(GUI), true);
-    PROCESS(CTAL_EN, { Rg(CTRL);  Rg(ALT);   }, { Un(ALT);   Un(CTRL);  }, true);
-    PROCESS(SHAL_EN, { Rg(SHIFT); Rg(ALT);   }, { Un(ALT);   Un(SHIFT); }, true);
-    PROCESS(CTSH_EN, { Rg(CTRL);  Rg(SHIFT); }, { Un(SHIFT); Un(CTRL);  }, true);
-    PROCESS(MCAS_EN, { Rg(CTRL);  Rg(ALT); Rg(SHIFT); }, { Un(SHIFT); Un(ALT); Un(CTRL); }, true);
+    PROCESS(CTAL_EN, { Rg(CTL);  Rg(ALT);   }, { Un(ALT);   Un(CTL);  }, true);
+    PROCESS(SHAL_EN, { Rg(SFT); Rg(ALT);   }, { Un(ALT);   Un(SFT); }, true);
+    PROCESS(CTSH_EN, { Rg(CTL);  Rg(SFT); }, { Un(SFT); Un(CTL);  }, true);
+    PROCESS(MCAS_EN, { Rg(CTL);  Rg(ALT); Rg(SFT); }, { Un(SFT); Un(ALT); Un(CTL); }, true);
   }
 
   return true;
