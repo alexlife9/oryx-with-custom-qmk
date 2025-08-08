@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRANSPARENT, KC_Q,           KC_W,           KC_U,           KC_K,           KC_E,           KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_N,           KC_G,           KC_Y,           KC_NO,          KC_NO,          KC_NO,          
     KC_TRANSPARENT, KC_F,           KC_S,           KC_V,           KC_A,           KC_P,           AG_COMM,                                                                 KC_TRANSPARENT, KC_R,           KC_O,           KC_L,           KC_D,           KC_NO,          KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_Z,           KC_H,           KC_C,           KC_M,           KC_I,                                           KC_T,           KC_J,           KC_B,           KC_X,           KC_NO,          KC_TRANSPARENT, 
-    GO_TO_RU,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
+    TO(0),          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                 TT(3),          TT(4),          KC_TRANSPARENT
   ),
   [2] = LAYOUT_moonlander(
@@ -56,7 +56,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRANSPARENT, KC_NO,          KC_KP_7,        KC_KP_8,        KC_KP_9,        KC_KP_PLUS,     KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_HOME,        KC_UP,          KC_END,         KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_NO,          KC_KP_4,        KC_KP_5,        KC_KP_6,        KC_TRANSPARENT, KC_KP_COMMA,                                                                    KC_TRANSPARENT, KC_TRANSPARENT, KC_LEFT,        KC_DOWN,        KC_RIGHT,       KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_NO,          KC_KP_1,        KC_KP_2,        KC_KP_3,        KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
-    GO_TO_RU,          KC_NO,          KC_NO,          KC_KP_0,        KC_KP_EQUAL,    KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, GO_TO_EN,          
+    TO(0),          KC_NO,          KC_NO,          KC_KP_0,        KC_KP_EQUAL,    KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, GO_TO_EN,          
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                 TT(3),          TT(4),          KC_TRANSPARENT
   ),
   [3] = LAYOUT_moonlander(
@@ -64,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ST_MACRO_0,     RU_NUM,         KC_NO,          TD(DANCE_3),    KC_NO,          US_EACU,        KC_NO,                                          KC_NO,          US_NTIL,        RU_RUBL,        RU_SHCH,        KC_NO,          KC_NO,          KC_NO,          
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          US_AACU,        KC_NO,          KC_NO,                                                                          KC_NO,          KC_NO,          TD(DANCE_4),    KC_NO,          KC_NO,          KC_NO,          KC_NO,          
     QK_BOOT,        KC_NO,          KC_NO,          KC_NO,          KC_NO,          US_IACU,                                        KC_NO,          RU_HARD,        KC_NO,          KC_NO,          KC_NO,          KC_NO,          
-    GO_TO_RU,          KC_NO,          KC_NO,          KC_NO,          ST_MACRO_1,     KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_NO,          KC_NO,          KC_NO,          KC_NO,          GO_TO_EN,          
+    TO(0),          KC_NO,          KC_NO,          KC_NO,          ST_MACRO_1,     KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_NO,          KC_NO,          KC_NO,          KC_NO,          GO_TO_EN,          
     KC_TRANSPARENT, KC_TRANSPARENT, KC_LEFT_ALT,                    KC_TRANSPARENT, TT(4),          KC_TRANSPARENT
   ),
   [4] = LAYOUT_moonlander(
@@ -72,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_NO,          RU_NUM,         KC_HOME,        KC_UP,          KC_END,         KC_PGDN,        KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TILD,        KC_LBRC,        KC_PIPE,        KC_RBRC,        KC_QUOTE,       KC_GRAVE,       
     KC_TRANSPARENT, KC_NO,          KC_LEFT,        KC_DOWN,        KC_RIGHT,       KC_PAGE_UP,     KC_TRANSPARENT,                                                                 KC_TRANSPARENT, KC_CIRC,        KC_LCBR,        KC_TRANSPARENT, KC_RCBR,        KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_BSLS,        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
-    GO_TO_RU,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, GO_TO_EN,          
+    TO(0),          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, GO_TO_EN,          
     KC_NO,          KC_TRANSPARENT, TO(2),                          TT(3), KC_TRANSPARENT, KC_TRANSPARENT
   ),
 };
