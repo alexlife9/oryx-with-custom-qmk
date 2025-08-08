@@ -565,6 +565,7 @@ bool lang_shift_process_custom_keycodes(Key key, keyrecord_t* record) {
         // Шаг 2: Устанавливаем и синхронизируем язык.
         // Мы уже знаем, что находимся на слое 0, так что эта функция
         // просто переключит язык в ОС на русский, если он был другим.
+        lang_current = 1; // Временно говорим, что мы на английском.
         lang_activate_from_user(0);
       }
       return false; 
