@@ -1,7 +1,9 @@
+#include "lang_shift/include.h"
 #include QMK_KEYBOARD_H
 #include "version.h"
 #include "i18n.h"
 #define MOON_LED_LEVEL LED_LEVEL
+#define CUSTOM_SAFE_RANGE ML_SAFE_RANGE
 #ifndef ZSA_SAFE_RANGE
 #define ZSA_SAFE_RANGE SAFE_RANGE
 #endif
@@ -21,6 +23,14 @@ enum tap_dance_codes {
   DANCE_3,
   DANCE_4,
 };
+
+//const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+//    //---------------------------------------------------------------------------
+//  [0] = LAYOUT(EN_AMPR, EN_W,    SFT_N,   LA_CHNG), // & w <Шифт> <Переключение языка>
+//  [1] = LAYOUT(EN_7,    EN_S_W,  _______, RU_NUME), // 7 W <Шифт> №
+//  [2] = LAYOUT(RU_7 ,   RU_JU,   SFT_N,   LA_CHNG), // 7 ю <Шифт> <Переключение языка>
+//  [3] = LAYOUT(RU_QUES, RU_S_JU, _______, EN_GRV ), // ? Ю <Шифт> `
+//};
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -74,8 +84,6 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT(
   'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R',
                  'L', 'L', 'L', 'R', 'R', 'R'
 );
-
-
 
 
 extern rgb_config_t rgb_matrix_config;
@@ -151,6 +159,8 @@ bool rgb_matrix_indicators_user(void) {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (!lang_shift_process_record(keycode, record))
+    return false;
   switch (keycode) {
     case ST_MACRO_0:
     if (record->event.pressed) {
@@ -162,6 +172,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       SEND_STRING(SS_LALT(SS_TAP(X_LEFT_ALT) SS_TAP(X_KP_8) SS_TAP(X_KP_8) SS_TAP(X_KP_0) SS_TAP(X_KP_0) ));
     }
     break;
+
+    switch (keycode) {
+	  case TO(1):
+	    if (record->event.pressed) {
+	      lang_activate(0);
+	      register_code(KC_LCTRL);
+	      register_code(KC_D);
+	      unregister_code(KC_D);
+	      unregister_code(KC_LCTRL);
+	    }
+	    return false;
+	    break;
+	}
+	return true;
 
     case RGB_SLD:
         if (rawhid_state.rgb_control) {
@@ -175,6 +199,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+void user_timer(void) {
+  lang_shift_user_timer();
+}
+
+void matrix_scan_user(void) {
+  user_timer();
+}
 
 typedef struct {
     bool is_press_action;
