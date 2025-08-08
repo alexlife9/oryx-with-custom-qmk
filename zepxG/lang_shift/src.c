@@ -557,6 +557,18 @@ bool lang_shift_process_custom_keycodes(Key key, keyrecord_t* record) {
         lang_current_change = LANG_CHANGE_WIN_SPACE;
       }
       return false;
+    case GO_TO_RU:
+       if (down) {                  // Действуем только при нажатии
+        lang_activate_from_user(0); // 1. Устанавливаем целевой язык - русский (0)
+        layer_move(0);              // 2. Принудительно переключаем клавиатуру на слой 0
+      }
+      return false; 
+    case GO_TO_EN:
+       if (down) {                  // Действуем только при нажатии
+        lang_activate_from_user(0); // 1. Устанавливаем целевой язык - английский (1)
+        layer_move(0);              // 2. Принудительно переключаем клавиатуру на слой 1
+      }
+      return false;   
     case AG_3DOT:
       if (record->event.pressed) {
         lang_shift_tap_key(AG_DOT);
