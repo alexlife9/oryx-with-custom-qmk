@@ -1,4 +1,3 @@
-#include "lang_shift/include.h"
 #include QMK_KEYBOARD_H
 #include "version.h"
 #include "i18n.h"
@@ -7,6 +6,7 @@
 //#ifndef ZSA_SAFE_RANGE
 //#define ZSA_SAFE_RANGE SAFE_RANGE
 //#endif
+#include "lang_shift/include.h"
 
 enum custom_keycodes {
   RGB_SLD = CUSTOM_SAFE_RANGE,
@@ -26,7 +26,11 @@ enum tap_dance_codes {
 
 //const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //    //---------------------------------------------------------------------------
-//  [0] = LAYOUT(EN_AMPR, EN_W,    SFT_N,   LA_CHNG), // & w <Шифт> <Переключение языка>
+//  [0] = LAYOUT(
+//    EN_AMPR, 
+//    EN_W,    
+//    SFT_N,   
+//    LA_CHNG), // & w <Шифт> <Переключение языка>
 //  [1] = LAYOUT(EN_7,    EN_S_W,  _______, RU_NUME), // 7 W <Шифт> №
 //  [2] = LAYOUT(RU_7 ,   RU_JU,   SFT_N,   LA_CHNG), // 7 ю <Шифт> <Переключение языка>
 //  [3] = LAYOUT(RU_QUES, RU_S_JU, _______, EN_GRV ), // ? Ю <Шифт> `
