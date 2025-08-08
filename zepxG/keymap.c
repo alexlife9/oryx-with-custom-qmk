@@ -2,10 +2,7 @@
 #include "version.h"
 #include "i18n.h"
 #define MOON_LED_LEVEL LED_LEVEL
-#define CUSTOM_SAFE_RANGE ML_SAFE_RANGE
-//#ifndef ZSA_SAFE_RANGE
-//#define ZSA_SAFE_RANGE SAFE_RANGE
-//#endif
+#define CUSTOM_SAFE_RANGE ZSA_SAFE_RANGE
 #include "lang_shift/include.h"
 
 enum custom_keycodes {
