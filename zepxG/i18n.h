@@ -6,7 +6,7 @@
 #define RU_EF KC_A
 #define RU_YERU KC_S
 #define RU_VE KC_D
-#define RU_A KC_F
+//#define RU_A KC_F
 #define RU_PE KC_G
 #define RU_YA KC_Z
 #define RU_CHE KC_X
