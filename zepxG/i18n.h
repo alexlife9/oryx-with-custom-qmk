@@ -12,7 +12,7 @@
 #define RU_CHE KC_X
 #define RU_ES KC_C
 //#define RU_EM KC_V
-#define RU_I KC_B
+//#define RU_I KC_B
 #define RU_EN KC_Y
 #define RU_GHE KC_U
 #define RU_SHA KC_I

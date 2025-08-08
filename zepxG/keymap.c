@@ -178,10 +178,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	  case TO(1):
 	    if (record->event.pressed) {
 	      lang_activate(0);
-	      register_code(KC_LCTRL);
+	      register_code(KC_LCTL);
 	      register_code(KC_D);
 	      unregister_code(KC_D);
-	      unregister_code(KC_LCTRL);
+	      unregister_code(KC_LCTL);
 	    }
 	    return false;
 	    break;
