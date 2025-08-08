@@ -39,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_ESCAPE,      KC_HASH,        KC_TRANSPARENT, KC_EXLM,        KC_RABK,        KC_AT,          KC_DELETE,                                      KC_DQUO,        KC_PERC,        KC_DLR,         KC_QUES,        KC_UNDS,        KC_AMPR,        KC_PSCR,        
     KC_TAB,         RU_SHTI,        RU_TSE,         RU_U,           RU_KA,          RU_IE,          KC_LPRN,                                        KC_RPRN,        RU_EN,          RU_GHE,         TD(DANCE_1),    RU_ZE,          RU_E,           RU_YO,          
     KC_SCLN,        RU_EF,          RU_YERU,        RU_VE,          RU_A,           RU_PE,          KC_COMMA,                                                                       KC_DOT,         RU_ER,          RU_O,           RU_EL,          RU_DE,          RU_ZHE,         KC_COLN,        
-    KC_TRANSPARENT, RU_YA,          RU_CHE,         RU_ES,          RU_EM,          RU_I,                                           RU_TE,          TD(DANCE_2),    RU_BE,          RU_HA,          RU_YU,          KC_TRANSPARENT, 
+    KC_TRANSPARENT, RU_YA,          RU_CHE,         RU_ES,          RU_M,           RU_I,                                           RU_TE,          TD(DANCE_2),    RU_BE,          RU_HA,          RU_YU,          KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_LEFT_GUI,    KC_EQUAL,       KC_ENTER,                                                                                                       KC_BSPC,        KC_KP_SLASH,    KC_KP_ASTERISK, KC_KP_MINUS,    KC_KP_PLUS,     TO(1),          
     TD(DANCE_0),    KC_LEFT_CTRL,   TT(2),                          TT(3),          TT(4),          KC_SPACE
   ),
