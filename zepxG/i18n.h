@@ -6,13 +6,13 @@
 #define RU_U KC_E
 #define RU_KA KC_R
 #define RU_IE KC_T
-#define RU_LPRN S(KC_9)
 #define RU_SCLN S(KC_4)
 #define RU_EF KC_A
 #define RU_YERU KC_S
 #define RU_VE KC_D
 #define RU_A KC_F
 #define RU_PE KC_G
+#define RU_LPRN S(KC_9)
 #define RU_MINS KC_MINS
 #define RU_YA KC_Z
 #define RU_CHE KC_X
@@ -24,7 +24,6 @@
 #define RU_PERC S(KC_5)
 #define RU_QUES S(KC_7)
 #define RU_UNDS S(KC_MINS)
-#define RU_RPRN S(KC_0)
 #define RU_EN KC_Y
 #define RU_GHE KC_U
 #define RU_SHA KC_I
@@ -32,6 +31,7 @@
 #define RU_ZE KC_P
 #define RU_E KC_QUOT
 #define RU_YO KC_GRV
+#define RU_RPRN S(KC_0)
 #define RU_ER KC_H
 #define RU_O KC_J
 #define RU_EL KC_K
