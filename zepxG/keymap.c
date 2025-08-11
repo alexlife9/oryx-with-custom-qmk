@@ -8,8 +8,6 @@
 
 enum custom_keycodes {
   RGB_SLD = ZSA_SAFE_RANGE,
-  RU_EN,          // Наша новая кнопка: Русский -> Английский
-  EN_RU,          // Наша новая кнопка: Английский -> Русский
   ST_MACRO_0,
   ST_MACRO_1,
   ST_MACRO_2,
@@ -32,7 +30,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,         RU_SHTI,        RU_TSE,         RU_U,           RU_KA,          RU_IE,          RU_LPRN,                                        RU_RPRN,        RU_EN,          RU_GHE,         TD(DANCE_1),    RU_ZE,          RU_E,           RU_YO,          
     RU_SCLN,        RU_EF,          RU_YERU,        RU_VE,          RU_A,           RU_PE,          KC_DELETE,                                                                      KC_TRANSPARENT, RU_ER,          RU_O,           RU_EL,          RU_DE,          RU_ZHE,         RU_COLN,        
     RU_MINS,        RU_YA,          RU_CHE,         RU_ES,          RU_EM,          RU_I,                                           RU_TE,          TD(DANCE_2),    RU_BE,          RU_HA,          RU_YU,          RU_SLSH,        
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_LEFT_GUI,    KC_TRANSPARENT, RU_COMM,        KC_ENTER,                                                                                                       KC_BSPC,        RU_DOT,         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, RU_EN,          
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_LEFT_GUI,    KC_TRANSPARENT, RU_COMM,        KC_ENTER,                                                                                                       KC_BSPC,        RU_DOT,         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, TO(1),          
     TD(DANCE_0),    OSL(2),         TT(3),                          KC_LEFT_ALT,    KC_LEFT_CTRL,   TD(DANCE_3)
   ),
   [1] = LAYOUT_moonlander(
@@ -40,7 +38,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRANSPARENT, KC_Q,           KC_W,           KC_U,           KC_K,           KC_E,           KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_N,           KC_G,           KC_Y,           KC_NO,          KC_NO,          KC_NO,          
     KC_SCLN,        KC_F,           KC_S,           KC_V,           KC_A,           KC_P,           KC_DELETE,                                                                      KC_TRANSPARENT, KC_R,           KC_O,           KC_L,           KC_D,           KC_NO,          KC_COLN,        
     KC_TRANSPARENT, KC_Z,           KC_H,           KC_C,           KC_M,           KC_I,                                           KC_T,           KC_J,           KC_B,           KC_X,           KC_NO,          KC_TRANSPARENT, 
-    EN_RU,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_COMMA,       KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_DOT,         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
+    TO(0),          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_COMMA,       KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_DOT,         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
   ),
   [2] = LAYOUT_moonlander(
@@ -169,30 +167,6 @@ bool rgb_matrix_indicators_user(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case RU_EN: // Обрабатываем нажатие кнопки "Русский -> Английский"
-      if (record->event.pressed) { // Действуем только при нажатии
-        // Отправляем команду смены языка (Ctrl+Shift)
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        // Переходим на слой 1 (Английский)
-        layer_move(1);
-      }
-      return false;
-      
-    case EN_RU: // Обрабатываем нажатие кнопки "Английский -> Русский"
-      if (record->event.pressed) {
-        // Отправляем команду смены языка (Ctrl+Shift)
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        // Переходим на слой 0 (Русский)
-        layer_move(0);
-      }
-      return false;
-
     case ST_MACRO_0:
     if (record->event.pressed) {
       SEND_STRING(SS_LALT(SS_TAP(X_KP_3) SS_TAP(X_KP_5) SS_TAP(X_LEFT_ALT) ));
@@ -203,13 +177,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
     }
     break;
-    
     case ST_MACRO_2:
     if (record->event.pressed) {
       SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_3) SS_TAP(X_LEFT_ALT) ));
     }
     break;
-
     case RGB_SLD:
         if (rawhid_state.rgb_control) {
             return false;
