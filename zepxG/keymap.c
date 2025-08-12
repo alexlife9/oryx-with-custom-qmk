@@ -168,8 +168,9 @@ bool rgb_matrix_indicators_user(void) {
   return true;
 }
 
-
+#include "custom_logic.c"
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (!process_record_custom(keycode, record)) { return false; }
   switch (keycode) {
     case ST_MACRO_0:
     if (record->event.pressed) {
