@@ -35,7 +35,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: oryx
-          submodules: recursive
 
       - name: Download the full history for the merge to work correctly
         run: git pull --unshallow
@@ -73,10 +72,10 @@ jobs:
 
       - name: Merge Oryx with custom QMK
         run: |
-          # git fetch origin main
-          # git checkout -B main origin/main
-          # git merge -Xignore-all-space oryx
-          # git push
+          git fetch origin main
+          git checkout -B main origin/main
+          git merge -Xignore-all-space oryx
+          git push
 
       - name: Update QMK firmware submodule to latest version (${{ steps.download-layout-source.outputs.firmware_version }})
         run: |
