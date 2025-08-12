@@ -54,5 +54,3 @@
 #define US_UNDS S(KC_MINS)
 #define US_AMPR S(KC_7)
 #define US_RPRN S(KC_0)
-#define RU_NUM S(KC_3)
-#define RU_RUBL ALGR(KC_8)
