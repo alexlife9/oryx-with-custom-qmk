@@ -6,9 +6,9 @@
 
 // 2. вставь так: 
 
-// #include "custom_logic.c"                                         // это первое добавление
-// bool process_record_user(uint16_t keycode, keyrecord_t *record) { // это оригинальная строка
-//  if (!process_record_custom(keycode, record)) { return false; }   // это второе добавление
+//#include "custom_logic.c"                                            // это первое добавление
+//bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка
+//    if (!process_record_custom(keycode, record)) { return false; }   // это второе добавление
 
 // ========================================================================
     
@@ -38,9 +38,8 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LCTL);
                 is_russian_lang_active = true; // Запоминаем, что теперь язык русский
             }
-            // Выполняем смену слоя САМОСТОЯТЕЛЬНО.
+            // Выполняем смену слоя без условий.
             layer_move(0);
-            // Говорим QMK, что мы все сделали, и дальнейшая обработка этой кнопки не нужна.
             return false; 
 
         case TO(1): // Цель: перейти на слой 1 и активировать английский язык
@@ -52,9 +51,21 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LCTL);
                 is_russian_lang_active = false; // Запоминаем, что теперь язык английский
             }
-            // Выполняем смену слоя САМОСТОЯТЕЛЬНО.
+            // Выполняем смену слоя без условий.
             layer_move(1);
-            // Говорим QMK, что мы все сделали, и дальнейшая обработка этой кнопки не нужна.
+            return false;
+
+            case TO(3): // Цель: перейти на слой 3 и активировать английский язык
+            // Если сейчас активен русский язык, переключаем его в ОС и обновляем наш флаг.
+            if (is_russian_lang_active) {
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+                is_russian_lang_active = false; // Запоминаем, что теперь язык английский
+            }
+            // Выполняем смену слоя без условий.
+            layer_move(3);
             return false;
 
         default:
