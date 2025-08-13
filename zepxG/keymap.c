@@ -49,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     TD(DANCE_0),    RU_SHTI,        RU_TSE,         RU_U,           RU_KA,          RU_IE,          ST_MACRO_5,                                     ST_MACRO_10,    RU_EN,          RU_GHE,         TD(DANCE_1),    RU_ZE,          RU_E,           RU_YO,          
     RU_SCLN,        RU_EF,          RU_YERU,        RU_VE,          RU_A,           RU_PE,          RU_LPRN,                                                                        RU_RPRN,        RU_ER,          RU_O,           RU_EL,          RU_DE,          RU_ZHE,         RU_COLN,        
     RU_MINS,        RU_YA,          RU_CHE,         RU_ES,          RU_EM,          RU_I,                                           RU_TE,          TD(DANCE_2),    RU_BE,          RU_HA,          RU_YU,          RU_SLSH,        
-    KC_TRANSPARENT, ST_MACRO_6,     KC_TRANSPARENT, KC_LEFT_SHIFT,  RU_COMM,        KC_ENTER,                                                                                                       KC_BSPC,        RU_DOT,         ST_MACRO_11,    ST_MACRO_12,    ST_MACRO_13,    TO(1),          
+    KC_TRANSPARENT, ST_MACRO_6,     KC_TRANSPARENT, KC_LEFT_SHIFT,  RU_COMM,        MT(MOD_LSFT, KC_ENTER),                                                                                                KC_BSPC,        RU_DOT,         ST_MACRO_11,    ST_MACRO_12,    ST_MACRO_13,    TO(1),          
     OSM(MOD_LSFT),  TT(2),          OSL(3),                         TD(DANCE_3),    MT(MOD_LCTL, KC_DELETE),KC_SPACE
   ),
   [1] = LAYOUT_moonlander(
@@ -167,9 +167,7 @@ bool rgb_matrix_indicators_user(void) {
 }
 
 
-#include "custom_logic.c"                                            // это первое добавление
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка
-    if (!process_record_custom(keycode, record)) { return false; }   // это второе добавление
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case ST_MACRO_0:
     if (record->event.pressed) {
