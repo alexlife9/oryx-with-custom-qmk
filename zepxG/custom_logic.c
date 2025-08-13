@@ -55,7 +55,20 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             layer_move(1);
             return false;
 
-            case TO(3): // Цель: перейти на слой 3 и активировать английский язык
+            case TT(2): // Цель: перейти на слой 2 и активировать английский язык
+            // Если сейчас активен русский язык, переключаем его в ОС и обновляем наш флаг.
+            if (is_russian_lang_active) {
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+                is_russian_lang_active = false; // Запоминаем, что теперь язык английский
+            }
+            // Выполняем смену слоя без условий.
+            layer_move(2);
+            return false;
+
+            case OSL(3): // Цель: перейти на слой 3 и активировать английский язык
             // Если сейчас активен русский язык, переключаем его в ОС и обновляем наш флаг.
             if (is_russian_lang_active) {
                 register_code(KC_LCTL);
