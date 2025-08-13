@@ -17,7 +17,6 @@
 #define RU_ES KC_C
 #define RU_EM KC_V
 #define RU_I KC_B
-#define RU_COMM S(KC_SLSH)
 #define RU_PERC S(KC_5)
 #define RU_QUES S(KC_7)
 #define RU_UNDS S(KC_MINS)
@@ -54,3 +53,6 @@
 #define US_UNDS S(KC_MINS)
 #define US_AMPR S(KC_7)
 #define US_RPRN S(KC_0)
+#define RU_NUM S(KC_3)
+#define RU_RUBL ALGR(KC_8)
+#define ES_LA_07 S(KC_SCLN)
