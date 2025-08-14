@@ -19,6 +19,7 @@
 #define RU_EM KC_V
 #define RU_I KC_B
 #define RU_COMM S(KC_SLSH)
+#define RU_DQUO S(KC_2)
 #define RU_PERC S(KC_5)
 #define RU_QUES S(KC_7)
 #define RU_UNDS S(KC_MINS)
