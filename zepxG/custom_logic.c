@@ -1,27 +1,7 @@
-// ========================================================================
-
-// 1. найди функцию bool process_record_user(...) 
-// 2. вставь так: 
-
-//#include "custom_logic.c"                                            // это первое добавление
-//bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка
-//    if (!process_record_custom(keycode, record)) { return false; }   // это второе добавление
-
-// ========================================================================
-    
-
 #include "quantum.h" // Для get_highest_layer, layer_state_t, rgb_matrix
 #include "timer.h"   // Для timer_read и timer_elapsed
 
 static bool is_russian_lang_active = true;
-
-// Переменные для отслеживания состояния OSM(MOD_LSFT)
-static bool shift_held = false;
-static uint16_t shift_timer = 0;
-
-// --- Глобальная переменная для отслеживания языка ---
-// true = русский, false = английский.
-// По умолчанию при включении клавиатуры считаем, что активен русский язык (слой 0).
 
 // Массив для отслеживания времени нажатия каждой клавиши (до 72 LED для Moonlander)
 static uint16_t key_press_timers[RGB_MATRIX_LED_COUNT] = {0};
@@ -77,8 +57,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 // Она перехватывает нажатия кнопок до того, как их обработает стандартная логика Oryx.
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
-
-        // Получаем индекс LED для нажатой клавиши
+    // Получаем индекс LED для нажатой клавиши
     uint8_t led_index = g_led_config.matrix_co[record->event.key.row][record->event.key.col];
 
     // Если клавиша имеет LED и нажата, запускаем вспышку
