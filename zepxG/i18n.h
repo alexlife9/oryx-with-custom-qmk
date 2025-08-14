@@ -5,6 +5,7 @@
 #define RU_KA KC_R
 #define RU_IE KC_T
 #define RU_SCLN S(KC_4)
+#define RU_PLUS S(KC_EQL)
 #define RU_EF KC_A
 #define RU_YERU KC_S
 #define RU_VE KC_D
@@ -21,6 +22,7 @@
 #define RU_PERC S(KC_5)
 #define RU_QUES S(KC_7)
 #define RU_UNDS S(KC_MINS)
+#define RU_COLN S(KC_6)
 #define RU_EN KC_Y
 #define RU_GHE KC_U
 #define RU_SHA KC_I
@@ -34,7 +36,7 @@
 #define RU_EL KC_K
 #define RU_DE KC_L
 #define RU_ZHE KC_SCLN
-#define RU_COLN S(KC_6)
+#define RU_ASTR S(KC_8)
 #define RU_TE KC_N
 #define RU_SOFT KC_M
 #define RU_HARD KC_RBRC
@@ -47,6 +49,7 @@
 #define US_LABK S(KC_COMM)
 #define US_EXLM S(KC_1)
 #define US_RABK S(KC_DOT)
+#define US_PLUS S(KC_EQL)
 #define US_LPRN S(KC_9)
 #define US_PERC S(KC_5)
 #define US_DLR S(KC_4)
@@ -54,6 +57,4 @@
 #define US_UNDS S(KC_MINS)
 #define US_AMPR S(KC_7)
 #define US_RPRN S(KC_0)
-#define RU_NUM S(KC_3)
-#define RU_RUBL ALGR(KC_8)
-#define ES_LA_07 S(KC_SCLN)
+#define US_ASTR S(KC_8)
