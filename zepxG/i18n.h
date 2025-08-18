@@ -27,7 +27,6 @@
 #define RU_EN KC_Y
 #define RU_GHE KC_U
 #define RU_SHA KC_I
-#define RU_SHCH KC_O
 #define RU_ZE KC_P
 #define RU_E KC_QUOT
 #define RU_RPRN S(KC_0)
