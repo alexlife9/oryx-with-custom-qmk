@@ -18,6 +18,7 @@
 #define RU_ES KC_C
 #define RU_EM KC_V
 #define RU_I KC_B
+#define RU_YO KC_GRV
 #define RU_DQUO S(KC_2)
 #define RU_PERC S(KC_5)
 #define RU_QUES S(KC_7)
@@ -29,7 +30,6 @@
 #define RU_SHCH KC_O
 #define RU_ZE KC_P
 #define RU_E KC_QUOT
-#define RU_YO KC_GRV
 #define RU_RPRN S(KC_0)
 #define RU_ER KC_H
 #define RU_O KC_J

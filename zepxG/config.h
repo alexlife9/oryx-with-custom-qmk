@@ -1,5 +1,5 @@
 #define USB_SUSPEND_WAKEUP_DELAY 0
-#define SERIAL_NUMBER "zepxG/EexEYG"
+#define SERIAL_NUMBER "zepxG/OayO63"
 #define LAYER_STATE_8BIT
 #define COMBO_COUNT 1
 
