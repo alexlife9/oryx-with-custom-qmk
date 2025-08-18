@@ -51,7 +51,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             } else if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) < 175) { // Локальный таймаут 175 мс
                 lprn_tap_count = 2;
                 // Двойной клик: печатаем () и перемещаем курсор
-                SEND_STRING("()"SS_TAP(X_LEFT));
+                SEND_STRING(")"SS_TAP(X_LEFT));
                 lprn_tap_count = 0; // Сбрасываем счётчик
                 return false;
             } else {
