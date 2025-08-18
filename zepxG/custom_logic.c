@@ -10,6 +10,7 @@
 // ========================================================================
 
 #include "quantum.h" // Для get_highest_layer, layer_state_t
+#include "timer.h"   // Для timer_read и timer_elapsed
 
 static bool is_russian_lang_active = true;
 
@@ -36,6 +37,35 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
+    // Обработка двойного клика для KC_LPRN
+    if (keycode == KC_LPRN) {
+        if (record->event.pressed) {
+            if (lprn_tap_count == 0) {
+                lprn_timer = timer_read();
+                lprn_tap_count = 1;
+            } else if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) < TAPPING_TERM) {
+                lprn_tap_count = 2;
+                // Двойной клик: печатаем () и перемещаем курсор
+                SEND_STRING("()"SS_TAP(X_LEFT));
+                lprn_tap_count = 0; // Сбрасываем счётчик
+                return false;
+            } else {
+                lprn_tap_count = 0; // Сбрасываем, если истёк таймаут
+                lprn_timer = timer_read();
+                lprn_tap_count = 1;
+            }
+        } else { // При отпускании
+            if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) > TAPPING_TERM) {
+                // Одиночное нажатие: просто печатаем (
+                register_code(KC_LPRN);
+                unregister_code(KC_LPRN);
+                lprn_tap_count = 0;
+                return false;
+            }
+        }
+        return false; // Блокируем стандартную обработку KC_LPRN
+    }
+    
     // Остальная логика для других keycodes
     if (!record->event.pressed) { // Реагируем только на нажатия, а не на отпускания (для TO, TT, OSL).
         return true;
