@@ -21,6 +21,7 @@ static uint8_t lprn_tap_count = 0;
 // Переменные для обработки двойного клика RU_SHA
 #define SHA_TAPPING_TERM 175 // Тайм-аут для Ш/Щ
 static uint16_t sha_timer = 0;
+static uint8_t sha_tap_count = 0;
 
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
@@ -73,31 +74,31 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true; // Разрешаем стандартную обработку KC_LPRN, если не обработали
     }
 
-     if (keycode == RU_SHA) {
-        // Проверяем, что мы на слое 0. Если нет, ничего не делаем.
-        if (get_highest_layer(layer_state) != 0) {
-            return true; // Позволяем стандартному обработчику напечатать 'Ш'
-        }
-        
+     // Обработка двойного клика для RU_SHA (только на слое 0)
+    if (keycode == RU_SHA && get_highest_layer(layer_state) == 0) {
         if (record->event.pressed) {
-            // Проверяем, было ли предыдущее нажатие этой же клавиши недавно
-            if (timer_elapsed(sha_timer) < SHA_TAPPING_TERM) {
-                // Двойное нажатие!
-                // 1. Стираем предыдущую 'Ш'
-                SEND_STRING(SS_TAP(X_BACKSPACE));
-                // 2. Печатаем 'Щ'
-                SEND_STRING("Щ");
-                // Сбрасываем таймер, чтобы предотвратить тройное срабатывание
-                sha_timer = 0; 
-            } else {
-                // Одиночное нажатие. Просто печатаем 'Ш'.
-                SEND_STRING("Ш");
-                // Обновляем таймер на текущее время
+            dprintf("RU_SHA Pressed, Layer: %d, Tap count: %d\n", get_highest_layer(layer_state), sha_tap_count);
+            if (sha_tap_count == 0) {
                 sha_timer = timer_read();
+                sha_tap_count = 1;
+            } else if (sha_tap_count == 1 && timer_elapsed(sha_timer) < SHA_TAPPING_TERM) { // Локальный таймаут
+                sha_tap_count = 2;
+                // Двойной клик: печатаем Щ
+                SEND_STRING("Щ");
+                sha_tap_count = 0; // Сбрасываем счётчик
+            } else {
+                sha_tap_count = 0; // Сбрасываем, если истёк таймаут
+                sha_timer = timer_read();
+                sha_tap_count = 1;
+            }
+        } else { // При отпускании
+            if (sha_tap_count == 1 && timer_elapsed(sha_timer) > SHA_TAPPING_TERM) {
+                // Одиночное нажатие: печатаем Ш
+                SEND_STRING("Ш");
+                sha_tap_count = 0;
             }
         }
-        return false; // Полностью перехватываем стандартное поведение для этой клавиши
-    }
+        return false; // Полностью перехватываем RU_SHA на слое 0
 
     // Сбрасываем таймеры при нажатии любой ДРУГОЙ клавиши
     if (record->event.pressed) {
