@@ -59,14 +59,13 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
         } else { // При отпускании
             if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) > 175) {
-                // Одиночное нажатие: просто печатаем (
-                register_code(KC_LPRN);
-                unregister_code(KC_LPRN);
+                // Одиночное нажатие: печатаем ( с учётом текущей раскладки
+                SEND_STRING("(");
                 lprn_tap_count = 0;
                 return false;
             }
         }
-        return false; // Блокируем стандартную обработку KC_LPRN
+        return true; // Разрешаем стандартную обработку KC_LPRN, если не обработали
     }
 
     // Остальная логика для других keycodes
