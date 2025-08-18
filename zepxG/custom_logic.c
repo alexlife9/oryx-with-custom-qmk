@@ -40,27 +40,25 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Она перехватывает нажатия кнопок до того, как их обработает стандартная логика Oryx.
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
-    
-    // Обработка двойного клика только для KC_LPRN (код 550)
+
+    // Обработка двойного клика для KC_LPRN
     if (keycode == KC_LPRN) {
         if (record->event.pressed) {
             if (lprn_tap_count == 0) {
                 lprn_timer = timer_read();
                 lprn_tap_count = 1;
-            } else if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) < 175) { // Проверяем двойной клик
+            } else if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) < 100) { // Проверяем двойной клик
                 lprn_tap_count = 2;
                 // Двойной клик: печатаем () и перемещаем курсор
                 SEND_STRING("()"SS_TAP(X_LEFT));
+                return false;
             } else {
-                // Сбрасываем только если таймаут истёк или интервал слишком длинный
-                if (timer_elapsed(lprn_timer) >= 175) {
-                    lprn_tap_count = 0;
-                }
+                lprn_tap_count = 0; // Сбрасываем, если истёк таймаут
                 lprn_timer = timer_read();
                 lprn_tap_count = 1;
             }
         } else { // При отпускании
-            if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) > 175) {
+            if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) > 100) {
                 // Одиночное нажатие: печатаем ( только после таймаута
                 SEND_STRING("(");
                 lprn_tap_count = 0;
