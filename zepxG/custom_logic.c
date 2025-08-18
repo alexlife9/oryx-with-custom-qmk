@@ -41,7 +41,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
-    // Обработка двойного клика только для KC_LPRN (код 550)
+// Обработка двойного клика только для KC_LPRN (код 550)
     if (keycode == KC_LPRN) {
         if (record->event.pressed) {
             if (lprn_tap_count == 0) {
@@ -51,6 +51,8 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 lprn_tap_count = 2;
                 // Двойной клик: печатаем () и перемещаем курсор
                 SEND_STRING("()"SS_TAP(X_LEFT));
+                // Сбрасываем сразу после отправки, чтобы избежать дублирования
+                lprn_tap_count = 0;
             } else {
                 // Сбрасываем только если таймаут истёк
                 if (timer_elapsed(lprn_timer) >= 175) {
@@ -61,11 +63,9 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
         } else { // При отпускании
             if (lprn_tap_count == 1) {
-                // Одиночное нажатие: печатаем ( сразу при отпускании, если не было второго тапа
+                // Одиночное нажатие: печатаем ( сразу при отпускании
                 SEND_STRING("(");
                 lprn_tap_count = 0;
-            } else if (lprn_tap_count == 2) {
-                lprn_tap_count = 0; // Сбрасываем после двойного клика
             }
         }
         return false; // Полностью перехватываем KC_LPRN
