@@ -76,24 +76,24 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
     // Обработка двойного клика для 'Ш-Щ' (только на слое 0)
     if (keycode == RU_SHA && get_highest_layer(layer_state) == 0) {
         if (record->event.pressed) {
-            if (sh_tap_count == 0) {
-                sh_timer = timer_read();
-                sh_tap_count = 1;
-            } else if (sh_tap_count == 1 && timer_elapsed(sh_timer) < 175) { // Локальный таймаут 175 мс
-                sh_tap_count = 2;
+            if (sha_tap_count == 0) {
+                sha_timer = timer_read();
+                sha_tap_count = 1;
+            } else if (sha_tap_count == 1 && timer_elapsed(sha_timer) < 175) { // Локальный таймаут 175 мс
+                sha_tap_count = 2;
                 // Двойной клик: печатаем Щ
                 SEND_STRING("Щ");
-                sh_tap_count = 0; // Сбрасываем счётчик
+                sha_tap_count = 0; // Сбрасываем счётчик
             } else {
-                sh_tap_count = 0; // Сбрасываем, если истёк таймаут
-                sh_timer = timer_read();
-                sh_tap_count = 1;
+                sha_tap_count = 0; // Сбрасываем, если истёк таймаут
+                sha_timer = timer_read();
+                sha_tap_count = 1;
             }
         } else { // При отпускании
-            if (sh_tap_count == 1 && timer_elapsed(sh_timer) > 175) {
+            if (sha_tap_count == 1 && timer_elapsed(sha_timer) > 175) {
                 // Одиночное нажатие: печатаем Ш
                 SEND_STRING("Ш");
-                sh_tap_count = 0;
+                sha_tap_count = 0;
             }
         }
         return false; // Полностью перехватываем RU_SHA на слое 0
