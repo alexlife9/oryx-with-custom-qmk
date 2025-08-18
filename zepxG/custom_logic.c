@@ -18,7 +18,7 @@ static bool is_russian_lang_active = true;
 static uint16_t lprn_timer = 0;
 static uint8_t lprn_tap_count = 0;
 
-// Переменные для обработки двойного клика KC_SHA
+// Переменные для обработки двойного клика RU_SHA
 static uint16_t sh_timer = 0;
 static uint8_t sh_tap_count = 0;
 
@@ -73,8 +73,8 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true; // Разрешаем стандартную обработку KC_LPRN, если не обработали
     }
 
-    // Обработка двойного клика для KC_SHA (только на слое 0)
-    if (keycode == KC_SHA && get_highest_layer(layer_state) == 0) {
+    // Обработка двойного клика для RU_SHA (только на слое 0)
+    if (keycode == RU_SHA && get_highest_layer(layer_state) == 0) {
         if (record->event.pressed) {
             if (sh_tap_count == 0) {
                 sh_timer = timer_read();
@@ -96,7 +96,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 sh_tap_count = 0;
             }
         }
-        return false; // Полностью перехватываем KC_SHA на слое 0
+        return false; // Полностью перехватываем RU_SHA на слое 0
     }
 
     // Остальная логика для других keycodes
