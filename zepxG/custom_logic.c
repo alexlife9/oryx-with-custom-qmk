@@ -48,10 +48,10 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             if (lprn_tap_count == 0) {
                 lprn_timer = timer_read();
                 lprn_tap_count = 1;
-            } else if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) < 100) { // Локальный таймаут 175 мс
+            } else if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) < 175) { // Локальный таймаут 175 мс
                 lprn_tap_count = 2;
                 // Двойной клик: печатаем () и перемещаем курсор
-                SEND_STRING(")"SS_TAP(X_LEFT));
+                SEND_STRING("()"SS_TAP(X_LEFT));
                 lprn_tap_count = 0; // Сбрасываем счётчик
                 return false;
             } else {
@@ -60,8 +60,9 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 lprn_tap_count = 1;
             }
         } else { // При отпускании
-            if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) > 100) {
+            if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) > 175) {
                 // Одиночное нажатие: печатаем ( с учётом текущей раскладки
+                SS_DELAY(10)
                 SEND_STRING("(");
                 lprn_tap_count = 0;
                 return false;
