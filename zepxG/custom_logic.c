@@ -15,7 +15,7 @@
 static bool is_russian_lang_active = true;
 
 // Переменные для обработки двойного клика KC_LPRN
-#define PAREN_TAPPING_TERM 100 // Настраиваемый тайм-аут для скобок в миллисекундах
+//#define PAREN_TAPPING_TERM 100 // Настраиваемый тайм-аут для скобок в миллисекундах
 static uint16_t lprn_timer = 0;
 static uint8_t lprn_tap_count = 0;
 
@@ -42,37 +42,32 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
-// --- Обработка "забытого" одиночного нажатия ---
-    // Этот блок должен идти перед обработкой текущего нажатия,
-    // чтобы сначала завершить предыдущее действие.
-    if (lprn_tap_count > 0 && timer_elapsed(lprn_timer) > PAREN_TAPPING_TERM) {
-        // Если была запланирована печать одиночной скобки и время вышло, печатаем ее.
-        SEND_STRING("(");
-        lprn_tap_count = 0; // Сбрасываем счетчик
-    }
-
-    // --- Логика для KC_LPRN ---
+    // Обработка двойного клика для KC_LPRN
     if (keycode == KC_LPRN) {
         if (record->event.pressed) {
-            // Если с момента прошлого нажатия прошло мало времени, это второй тап
-            if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) < PAREN_TAPPING_TERM) {
-                // Это двойное нажатие.
+            if (lprn_tap_count == 0) {
+                lprn_timer = timer_read();
+                lprn_tap_count = 1;
+            } else if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) < 100) { // Локальный таймаут 175 мс
                 lprn_tap_count = 2;
-                SEND_STRING("()" SS_TAP(X_LEFT)); // Печатаем () и перемещаем курсор
-                lprn_tap_count = 0; // Сбрасываем счетчик сразу
+                // Двойной клик: печатаем () и перемещаем курсор
+                SEND_STRING(")"SS_TAP(X_LEFT));
+                lprn_tap_count = 0; // Сбрасываем счётчик
+                return false;
             } else {
-                // Это первое нажатие в серии.
+                lprn_tap_count = 0; // Сбрасываем, если истёк таймаут
+                lprn_timer = timer_read();
                 lprn_tap_count = 1;
             }
-            lprn_timer = timer_read(); // Сбрасываем таймер при каждом нажатии
-        } else { // При отпускании клавиши
-            if (lprn_tap_count == 1) {
-                // Одиночное нажатие: печатаем ( сразу при отпускании
+        } else { // При отпускании
+            if (lprn_tap_count == 1 && timer_elapsed(lprn_timer) > 100) {
+                // Одиночное нажатие: печатаем ( с учётом текущей раскладки
                 SEND_STRING("(");
-                lprn_tap_count = 0; // Сбрасываем счетчик
+                lprn_tap_count = 0;
+                return false;
             }
         }
-        return false; // Полностью перехватываем стандартное поведение
+        return true; // Разрешаем стандартную обработку KC_LPRN, если не обработали
     }
 
 
