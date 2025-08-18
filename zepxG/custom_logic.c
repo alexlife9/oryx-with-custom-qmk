@@ -18,9 +18,9 @@ static bool is_russian_lang_active = true;
 static uint16_t lprn_timer = 0;
 static uint8_t lprn_tap_count = 0;
 
-// Переменные для обработки двойного клика RU_SHA
-static uint16_t sha_timer = 0;
-static uint8_t sha_tap_count = 0;
+// Переменные для обработки двойного клика KC_SHA
+static uint16_t sh_timer = 0;
+static uint8_t sh_tap_count = 0;
 
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
@@ -73,30 +73,30 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true; // Разрешаем стандартную обработку KC_LPRN, если не обработали
     }
 
-    // Обработка двойного клика для 'Ш-Щ' (только на слое 0)
-    if (keycode == RU_SHA && get_highest_layer(layer_state) == 0) {
+    // Обработка двойного клика для KC_SHA (только на слое 0)
+    if (keycode == KC_SHA && get_highest_layer(layer_state) == 0) {
         if (record->event.pressed) {
-            if (sha_tap_count == 0) {
-                sha_timer = timer_read();
-                sha_tap_count = 1;
-            } else if (sha_tap_count == 1 && timer_elapsed(sha_timer) < 175) { // Локальный таймаут 175 мс
-                sha_tap_count = 2;
+            if (sh_tap_count == 0) {
+                sh_timer = timer_read();
+                sh_tap_count = 1;
+            } else if (sh_tap_count == 1 && timer_elapsed(sh_timer) < 175) { // Локальный таймаут 175 мс
+                sh_tap_count = 2;
                 // Двойной клик: печатаем Щ
                 SEND_STRING("Щ");
-                sha_tap_count = 0; // Сбрасываем счётчик
+                sh_tap_count = 0; // Сбрасываем счётчик
             } else {
-                sha_tap_count = 0; // Сбрасываем, если истёк таймаут
-                sha_timer = timer_read();
-                sha_tap_count = 1;
+                sh_tap_count = 0; // Сбрасываем, если истёк таймаут
+                sh_timer = timer_read();
+                sh_tap_count = 1;
             }
         } else { // При отпускании
-            if (sha_tap_count == 1 && timer_elapsed(sha_timer) > 175) {
+            if (sh_tap_count == 1 && timer_elapsed(sh_timer) > 175) {
                 // Одиночное нажатие: печатаем Ш
                 SEND_STRING("Ш");
-                sha_tap_count = 0;
+                sh_tap_count = 0;
             }
         }
-        return false; // Полностью перехватываем RU_SHA на слое 0
+        return false; // Полностью перехватываем KC_SHA на слое 0
     }
 
     // Остальная логика для других keycodes
