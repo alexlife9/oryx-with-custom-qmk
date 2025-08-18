@@ -17,7 +17,6 @@ static bool is_russian_lang_active = true;
 // Переменные для обработки двойного клика KC_LPRN
 #define PAREN_TAPPING_TERM 100 // Настраиваемый тайм-аут для скобок в миллисекундах
 static uint16_t lprn_timer = 0;
-static uint8_t lprn_tap_count = 0;
 
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
