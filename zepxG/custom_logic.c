@@ -60,16 +60,13 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
         // Кавычки " с двойным кликом
         case KC_DQUO:
-            if (get_highest_layer(layer_state) != 2) {
-                return true; // На других слоях не работаем
-            }
             if (record->event.pressed) {
                 // Проверяем, было ли предыдущее нажатие " совсем недавно.
                 if (timer_elapsed(dquo_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                  // 1. Стираем "
-                    SEND_STRING("\"\"" SS_TAP(X_LEFT)); // 2. Печатаем "" и ставим курсор внутрь
+                    SEND_STRING("\"\""SS_TAP(X_LEFT)); // 2. Печатаем "" и ставим курсор внутрь
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     dquo_timer = 0;
@@ -83,18 +80,16 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
-            // Скобка "(" с двойным кликом
-            case KC_LPRN:
-            if (get_highest_layer(layer_state) != 2) {
-                return true; // На других слоях не работаем
-            }
+
+        // Скобка "(" с двойным кликом
+        case KC_LPRN:
             if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие '[' совсем недавно.
+                // Проверяем, было ли предыдущее нажатие '(' совсем недавно.
                 if (timer_elapsed(lprn_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем (
-                    SEND_STRING("()" SS_TAP(X_LEFT)); // 2. Печатаем () и ставим курсор внутрь
+                    SEND_STRING("()"SS_TAP(X_LEFT)); // 2. Печатаем () и ставим курсор внутрь
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     lprn_timer = 0;
@@ -120,7 +115,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем {
-                    SEND_STRING("{}" SS_TAP(X_LEFT)); // 2. Печатаем {} и ставим курсор внутрь
+                    SEND_STRING("{}"SS_TAP(X_LEFT)); // 2. Печатаем {} и ставим курсор внутрь
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     lcbr_timer = 0;
@@ -146,7 +141,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем [
-                    SEND_STRING("[]" SS_TAP(X_LEFT)); // 2. Печатаем [] и ставим курсор внутрь
+                    SEND_STRING("[]"SS_TAP(X_LEFT)); // 2. Печатаем [] и ставим курсор внутрь
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     lbrc_timer = 0;
