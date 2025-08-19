@@ -58,22 +58,44 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 
-        // Кавычки " с двойным кликом
-        case KC_DQUO:
+        // Кавычки " с двойным кликом на рус слое
+        case RU_DQUO:
+            if (get_highest_layer(layer_state) != 0) {
+                return true; // На других слоях не работаем
+            }
             if (record->event.pressed) {
                 // Проверяем, было ли предыдущее нажатие " совсем недавно.
                 if (timer_elapsed(dquo_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                  // 1. Стираем "
-                    if (get_highest_layer(layer_state) == 0) {
-                        // На русском слое (0) отправляем RU_DQUO для двойного тапа
-                        tap_code16(RU_DQUO);
-                        SEND_STRING("\"\"" SS_TAP(X_LEFT)); // и печатаем "" и ставим курсор внутри
-                    } else {
-                        // На других слоях отправляем стандартные кавычки
-                        SEND_STRING("\"\"" SS_TAP(X_LEFT)); // 2. Печатаем "" и ставим курсор внутри
-                    }
+                    SEND_STRING("\"\"" SS_TAP(X_LEFT)); // 2. печатаем "" и ставим курсор внутри
+
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    dquo_timer = 0;
+                } else {
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    tap_code16(RU_DQUO); // Печатаем "
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    dquo_timer = timer_read();
+                }
+            }
+            return false;
+
+        // Кавычки " с двойным кликом на англ слое
+        case KC_DQUO:
+            if (get_highest_layer(layer_state) != 1 && get_highest_layer(layer_state) != 2) {
+                return true; // На других слоях не работаем
+            }
+            if (record->event.pressed) {
+                // Проверяем, было ли предыдущее нажатие " совсем недавно.
+                if (timer_elapsed(dquo_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // "Исправляем" предыдущее действие.
+                    tap_code(KC_BSPC);                  // 1. Стираем "
+                    SEND_STRING("\"\"" SS_TAP(X_LEFT)); // 2. печатаем "" и ставим курсор внутри
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     dquo_timer = 0;
