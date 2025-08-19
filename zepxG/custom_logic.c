@@ -18,9 +18,9 @@ static bool is_russian_lang_active = true;
 static uint16_t lprn_timer = 0;
 static uint8_t lprn_tap_count = 0;
 
-// Переменные для обработки двойного тапа RU_SHA
+// Переменные для обработки двойного клика RU_SHA - 'Ш'
 static uint16_t sha_timer = 0;
-static bool sha_double_tap = false;
+static uint8_t sha_tap_count = 0;
 
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
@@ -45,6 +45,16 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+
+        // Сбрасываем "чужие" счетчики при нажатии, чтобы избежать ложных срабатываний
+        if (record->event.pressed) {
+            if (keycode != KC_LPRN) {
+                lprn_tap_count = 0;
+            }
+            if (keycode != RU_SHA) {
+                sha_tap_count = 0;
+            }
+        }
 
         // Скобка "(" с двойным кликом
         case KC_LPRN:
@@ -76,30 +86,33 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
         // Буквы Ш-Щ с двойным кликом
         case RU_SHA:
-            if (record->event.pressed) {
-                // Нажатие клавиши
-                if (timer_elapsed(sha_timer) < 175) {
-                    // Двойной тап
-                    sha_double_tap = true;
-                } else {
-                    // Одиночный тап или сброс
-                    sha_double_tap = false;
-                    sha_timer = timer_read();
-                }
-            } else {
-                // Отпускание клавиши
-                if (sha_double_tap) {
-                    // Двойной тап: отправляем RU_SHCH ('щ')
-                    tap_code16(RU_SHCH);
-                } else if (timer_elapsed(sha_timer) > 175) {
-                    // Одиночный тап: отправляем RU_SHA ('ш')
-                    tap_code16(RU_SHA);
-                }
-                sha_double_tap = false;
+            // Выполняем логику только на слое 0
+            if (get_highest_layer(layer_state) != 0) {
+                return true; // На других слоях 'Ш' работает как обычно
             }
-            return false; // Блокируем стандартную обработку
-        default:
-            return true; // Обрабатываем другие клавиши стандартно
+
+            if (record->event.pressed) {
+                if (sha_tap_count == 0) {
+                    sha_timer = timer_read();
+                    sha_tap_count = 1;
+                } else if (sha_tap_count == 1 && timer_elapsed(sha_timer) < 175) { // Таймаут для Ш/Щ
+                    sha_tap_count = 2;
+                    tap_code(RU_SHCH); // Печатаем 'Щ'
+                    sha_tap_count = 0; // Сбрасываем счётчик
+                    return false;
+                } else {
+                    sha_tap_count = 0; // Сбрасываем, если истёк таймаут
+                    sha_timer = timer_read();
+                    sha_tap_count = 1;
+                }
+            } else { // При отпускании
+                if (sha_tap_count == 1 && timer_elapsed(sha_timer) > 175) {
+                    tap_code(RU_SHA); // Печатаем 'Ш'
+                    sha_tap_count = 0;
+                    return false;
+                }
+            }
+            return true; // Разрешаем стандартную обработку 'Ш', если не обработали
 
         case TO(0):
             if (record->event.pressed) layer_move(0);
