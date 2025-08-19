@@ -71,7 +71,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [3] = LAYOUT_moonlander(
     KC_TRANSPARENT, KC_F1,          KC_F2,          KC_F3,          KC_F4,          KC_F5,          KC_F6,                                          KC_F7,          KC_F8,          KC_F9,          KC_F10,         KC_F11,         KC_F12,         KC_NO,          
-    QK_BOOT,        KC_NO,          KC_NO,          ST_MACRO_14,    KC_NO,          ST_MACRO_15,    KC_NO,                                          KC_NO,          ST_MACRO_19,    KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          
+    QK_BOOT,        KC_NO,          KC_NO,          ST_MACRO_14,    KC_NO,          ST_MACRO_15,    KC_NO,                                          KC_NO,          ST_MACRO_19,    KC_NO,          RU_SHCH,        KC_NO,          KC_NO,          KC_NO,          
     KC_NO,          KC_NO,          KC_NO,          ST_MACRO_16,    ST_MACRO_17,    KC_NO,          KC_NO,                                                                          KC_NO,          KC_NO,          ST_MACRO_20,    KC_NO,          KC_NO,          KC_NO,          KC_NO,          
     KC_NO,          KC_NO,          KC_NO,          KC_TRANSPARENT, KC_NO,          ST_MACRO_18,                                    KC_NO,          KC_NO,          KC_TRANSPARENT, KC_NO,          KC_NO,          KC_NO,          
     TO(0),          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          TO(1),          
@@ -173,9 +173,7 @@ bool rgb_matrix_indicators_user(void) {
 }
 
 
-#include "custom_logic.c"                                            // это первое добавление
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка
-    if (!process_record_custom(keycode, record)) { return false; }   // это второе добавление
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case ST_MACRO_0:
     if (record->event.pressed) {
