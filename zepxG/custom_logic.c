@@ -73,7 +73,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
-                    tap_code(KC_DQUO); // Печатаем "
+                    tap_code16(KC_DQUO); // Печатаем "
 
                     // Запускаем таймер, чтобы отследить возможное второе нажатие.
                     dquo_timer = timer_read();
@@ -96,7 +96,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
-                    tap_code(KC_LPRN); // Печатаем '('
+                    tap_code16(KC_LPRN); // Печатаем '('
 
                     // Запускаем таймер, чтобы отследить возможное второе нажатие.
                     lprn_timer = timer_read();
@@ -122,7 +122,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
-                    tap_code(KC_LCBR); // Печатаем '{'
+                    tap_code16(KC_LCBR); // Печатаем '{'
 
                     // Запускаем таймер, чтобы отследить возможное второе нажатие.
                     lcbr_timer = timer_read();
