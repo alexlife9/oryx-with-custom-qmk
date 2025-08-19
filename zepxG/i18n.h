@@ -38,7 +38,6 @@
 #define RU_ASTR S(KC_8)
 #define RU_TE KC_N
 #define RU_SOFT KC_M
-#define RU_HARD KC_RBRC
 #define RU_BE KC_COMM
 #define RU_HA KC_LBRC
 #define RU_YU KC_DOT
@@ -58,3 +57,4 @@
 #define US_RPRN S(KC_0)
 #define US_ASTR S(KC_8)
 #define RU_SHCH KC_O
+#define RU_HARD KC_RBRC
