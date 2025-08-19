@@ -68,8 +68,8 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 if (timer_elapsed(dquo_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
-                    tap_code(RU_DQUO);   // печатаем вторую кавычку
-                    tap_code(KC_LEFT);   // и ставим курсор внутри
+                    tap_code16(RU_DQUO);   // печатаем вторую кавычку
+                    tap_code16(KC_LEFT);   // и ставим курсор внутри
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     dquo_timer = 0;
