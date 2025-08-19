@@ -80,28 +80,35 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             if (get_highest_layer(layer_state) != 0) {
                 return true; // На других слоях 'Ш' работает как обычно
             }
+
             if (record->event.pressed) {
                 if (sha_tap_count == 0) {
+                    // Это первое нажатие. Запускаем таймер и счетчик.
                     sha_timer = timer_read();
                     sha_tap_count = 1;
-                } else if (sha_tap_count == 1 && timer_elapsed(sha_timer) < 175) { // Таймаут для Ш/Щ
-                    sha_tap_count = 2;
-                    tap_code(RU_SHCH); // Печатаем 'Щ'
+                } else if (sha_tap_count == 1 && timer_elapsed(sha_timer) < 175) {
+                    // Это второе нажатие (двойной клик).
+                    sha_tap_count = 2; // Отмечаем, что это был двойной клик
+                    tap_code(RU_SHCH); // Сразу печатаем 'Щ'
                     sha_tap_count = 0; // Сбрасываем счётчик
-                    return false;
+                    return false;      // И блокируем дальнейшую обработку
                 } else {
-                    sha_tap_count = 0; // Сбрасываем, если истёк таймаут
+                    // Таймаут истек, это снова первое нажатие.
+                    sha_tap_count = 0;
                     sha_timer = timer_read();
                     sha_tap_count = 1;
                 }
             } else { // При отпускании
+                // Если это было одиночное нажатие и прошло достаточно времени...
                 if (sha_tap_count == 1 && timer_elapsed(sha_timer) > 175) {
-                    tap_code(RU_SHA); // Печатаем 'Ш'
-                    sha_tap_count = 0;
-                    return false;
+                    // ...печатаем 'Ш'.
+                    tap_code(RU_SHA);
+                    sha_tap_count = 0; // Сбрасываем счетчик
+                    return false;      // Блокируем дальнейшую обработку
                 }
             }
-            return true; // Разрешаем стандартную обработку 'Ш', если не обработали
+            // ВАЖНО: Блокируем стандартный обработчик, чтобы он не напечатал лишнюю 'Ш'.
+            return false;
 
         case TO(0):
             if (record->event.pressed) layer_move(0);
