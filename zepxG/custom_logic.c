@@ -18,6 +18,10 @@ static bool is_russian_lang_active = true;
 static uint16_t lprn_timer = 0;
 static uint8_t lprn_tap_count = 0;
 
+// Переменные для обработки двойного тапа RU_SHA
+static uint16_t sha_timer = 0;
+static bool sha_double_tap = false;
+
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -41,9 +45,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        // ------------------------------------------------
+
         // Скобка "(" с двойным кликом
-        // ------------------------------------------------
         case KC_LPRN:
             if (record->event.pressed) {
                 if (lprn_tap_count == 0) {
@@ -70,6 +73,33 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return true;
+
+        // Буквы Ш-Щ с двойным кликом
+        case RU_SHA:
+            if (record->event.pressed) {
+                // Нажатие клавиши
+                if (timer_elapsed(sha_timer) < 175) {
+                    // Двойной тап
+                    sha_double_tap = true;
+                } else {
+                    // Одиночный тап или сброс
+                    sha_double_tap = false;
+                    sha_timer = timer_read();
+                }
+            } else {
+                // Отпускание клавиши
+                if (sha_double_tap) {
+                    // Двойной тап: отправляем RU_SHCH ('щ')
+                    tap_code16(RU_SHCH);
+                } else if (timer_elapsed(sha_timer) > 175) {
+                    // Одиночный тап: отправляем RU_SHA ('ш')
+                    tap_code16(RU_SHA);
+                }
+                sha_double_tap = false;
+            }
+            return false; // Блокируем стандартную обработку
+        default:
+            return true; // Обрабатываем другие клавиши стандартно
 
         case TO(0):
             if (record->event.pressed) layer_move(0);
