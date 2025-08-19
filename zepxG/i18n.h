@@ -57,3 +57,4 @@
 #define US_AMPR S(KC_7)
 #define US_RPRN S(KC_0)
 #define US_ASTR S(KC_8)
+#define RU_SHCH KC_O
