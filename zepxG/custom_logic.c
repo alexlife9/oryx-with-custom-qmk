@@ -58,17 +58,14 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 
-        // Кавычки " с двойным кликом на рус слое
-        case RU_DQUO:
-            if (get_highest_layer(layer_state) != 0) {
-                return true; // На других слоях не работаем
-            }
+        // Кавычки " с двойным кликом
+        case KC_DQUO:
             if (record->event.pressed) {
                 // Проверяем, было ли предыдущее нажатие " совсем недавно.
                 if (timer_elapsed(dquo_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
-                    tap_code16(RU_DQUO);   // печатаем вторую кавычку
+                    tap_code16(KC_DQUO);   // печатаем вторую кавычку
                     tap_code16(KC_LEFT);   // и ставим курсор внутри
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
@@ -76,7 +73,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
-                    tap_code16(RU_DQUO); // Печатаем "
+                    tap_code16(KC_DQUO); // Печатаем "
 
                     // Запускаем таймер, чтобы отследить возможное второе нажатие.
                     dquo_timer = timer_read();
@@ -84,7 +81,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        // Кавычки " с двойным кликом на англ слое
+/*         // Кавычки " с двойным кликом на англ слое
         case KC_DQUO:
             if (get_highest_layer(layer_state) != 1 && get_highest_layer(layer_state) != 2) {
                 return true; // На других слоях не работаем
@@ -108,7 +105,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     dquo_timer = timer_read();
                 }
             }
-            return false;
+            return false; */
 
         // Скобка "(" с двойным кликом
         case KC_LPRN:
