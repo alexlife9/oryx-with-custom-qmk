@@ -66,7 +66,14 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                  // 1. Стираем "
-                    SEND_STRING("\"\""SS_TAP(X_LEFT)); // 2. Печатаем "" и ставим курсор внутрь
+                    if (get_highest_layer(layer_state) == 0) {
+                        // На русском слое (0) отправляем RU_DQUO для двойного тапа
+                        tap_code16(RU_DQUO);
+                        SEND_STRING("\"\"" SS_TAP(X_LEFT)); // и печатаем "" и ставим курсор внутри
+                    } else {
+                        // На других слоях отправляем стандартные кавычки
+                        SEND_STRING("\"\"" SS_TAP(X_LEFT)); // 2. Печатаем "" и ставим курсор внутри
+                    }
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     dquo_timer = 0;
