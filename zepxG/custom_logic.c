@@ -90,7 +90,6 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             if (get_highest_layer(layer_state) != 0) {
                 return true; // На других слоях 'Ш' работает как обычно
             }
-
             if (record->event.pressed) {
                 if (sha_tap_count == 0) {
                     sha_timer = timer_read();
