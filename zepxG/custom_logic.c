@@ -46,16 +46,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 
-        // Сбрасываем "чужие" счетчики при нажатии, чтобы избежать ложных срабатываний
-        if (record->event.pressed) {
-            if (keycode != KC_LPRN) {
-                lprn_tap_count = 0;
-            }
-            if (keycode != RU_SHA) {
-                sha_tap_count = 0;
-            }
-        }
-
         // Скобка "(" с двойным кликом
         case KC_LPRN:
             if (record->event.pressed) {
@@ -127,12 +117,13 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         case OSL(3):
             return true;  // Разрешаем стандартную обработку
 
-        // ------------------------------------------------
-        // Всё остальное
-        // ------------------------------------------------
         default:
-            // Если это отпускание — пропускаем
-            if (!record->event.pressed) return true;
+            // === ПРАВИЛЬНОЕ МЕСТО ДЛЯ СБРОСА СЧЕТЧИКОВ ===
+            // Этот блок сработает для любой другой клавиши.
+            if (record->event.pressed) {
+                lprn_tap_count = 0;
+                sha_tap_count = 0;
+            }
             return true;
     }
 }
