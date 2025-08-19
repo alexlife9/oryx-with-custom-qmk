@@ -19,8 +19,8 @@ static uint16_t lprn_timer = 0;
 static uint8_t lprn_tap_count = 0;
 
 // Переменные для обработки двойного клика RU_SHA - 'Ш'
+#define SHA_TAPPING_TERM 175 // Настраиваемый тайм-аут
 static uint16_t sha_timer = 0;
-static uint8_t sha_tap_count = 0;
 
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
@@ -45,6 +45,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+
 
         // Скобка "(" с двойным кликом
         case KC_LPRN:
@@ -76,38 +77,33 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
         // Буквы Ш-Щ с двойным кликом
         case RU_SHA:
-            // Выполняем логику только на слое 0
+            // Требование 1: Логика работает только на слое 0.
             if (get_highest_layer(layer_state) != 0) {
-                return true; // На других слоях 'Ш' работает как обычно
+                return true; // На других слоях 'Ш' работает как обычно.
             }
 
+            // Требование 2: Реагируем только на нажатие.
             if (record->event.pressed) {
-                if (sha_tap_count == 0) {
-                    // Это первое нажатие. Запускаем таймер и счетчик.
-                    sha_timer = timer_read();
-                    sha_tap_count = 1;
-                } else if (sha_tap_count == 1 && timer_elapsed(sha_timer) < 175) {
-                    // Это второе нажатие (двойной клик).
-                    sha_tap_count = 2; // Отмечаем, что это был двойной клик
-                    tap_code(RU_SHCH); // Сразу печатаем 'Щ'
-                    sha_tap_count = 0; // Сбрасываем счётчик
-                    return false;      // И блокируем дальнейшую обработку
+                // Проверяем, было ли предыдущее нажатие 'Ш' совсем недавно.
+                if (timer_elapsed(sha_timer) < SHA_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // "Исправляем" предыдущее действие.
+                    tap_code(KC_BSPC); // 1. Стираем 'Ш'
+                    tap_code(RU_SHCH);      // 2. Печатаем 'Щ'
+
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    sha_timer = 0;
                 } else {
-                    // Таймаут истек, это снова первое нажатие.
-                    sha_tap_count = 0;
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    tap_code(RU_SHA); // 1. Печатаем 'Ш'
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
                     sha_timer = timer_read();
-                    sha_tap_count = 1;
-                }
-            } else { // При отпускании
-                // Если это было одиночное нажатие и прошло достаточно времени...
-                if (sha_tap_count == 1 && timer_elapsed(sha_timer) > 175) {
-                    // ...печатаем 'Ш'.
-                    tap_code(RU_SHA);
-                    sha_tap_count = 0; // Сбрасываем счетчик
-                    return false;      // Блокируем дальнейшую обработку
                 }
             }
-            // ВАЖНО: Блокируем стандартный обработчик, чтобы он не напечатал лишнюю 'Ш'.
+            // Требование 3: Полностью перехватываем управление этой клавишей.
+            // Стандартный обработчик QMK не должен ничего делать.
             return false;
 
         case TO(0):
@@ -124,13 +120,12 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         case OSL(3):
             return true;  // Разрешаем стандартную обработку
 
+        // ------------------------------------------------
+        // Всё остальное
+        // ------------------------------------------------
         default:
-            // === ПРАВИЛЬНОЕ МЕСТО ДЛЯ СБРОСА СЧЕТЧИКОВ ===
-            // Этот блок сработает для любой другой клавиши.
-            if (record->event.pressed) {
-                lprn_tap_count = 0;
-                sha_tap_count = 0;
-            }
+            // Если это отпускание — пропускаем
+            if (!record->event.pressed) return true;
             return true;
     }
 }
