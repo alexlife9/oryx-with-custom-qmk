@@ -4,7 +4,7 @@
 // 2. вставь так: 
 
 //#include "custom_logic.c"                                            // это первое добавление
-//bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка
+//bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
 //    if (!process_record_custom(keycode, record)) { return false; }   // это второе добавление
 
 // ========================================================================
