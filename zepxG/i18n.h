@@ -39,7 +39,6 @@
 #define RU_HA KC_LBRC
 #define RU_YU KC_DOT
 #define RU_DOT KC_SLSH
-#define US_NTIL ALGR(KC_N)
 #define RU_SHCH KC_O
 #define RU_HARD KC_RBRC
 #define US_RSQU ALGR(KC_0)
