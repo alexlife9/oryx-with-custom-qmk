@@ -245,7 +245,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) layer_move(1);
             return false;
 
-        case TT(2):
+        case TG(2):
             return true;  // Разрешаем стандартную обработку
 
         case OSL(3):
