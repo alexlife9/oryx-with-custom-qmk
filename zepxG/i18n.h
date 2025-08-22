@@ -41,4 +41,3 @@
 #define RU_DOT KC_SLSH
 #define RU_SHCH KC_O
 #define RU_HARD KC_RBRC
-#define US_RSQU ALGR(KC_0)
