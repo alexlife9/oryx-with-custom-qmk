@@ -237,6 +237,14 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;    
 
+        // Отслеживаем нажатие клавиши на месте '>' в слое #4
+        case ST_MACRO_25:  
+            if (record->event.pressed) {
+                // При нажатии сразу печатаем ➜
+                SEND_STRING("➜");
+            }
+            return false; // мы всё сделали сами, дальше не обрабатываем
+
         case TO(0):
             if (record->event.pressed) layer_move(0);
             return false;
