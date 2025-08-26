@@ -238,12 +238,25 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             return false;    
 
         // Отслеживаем нажатие клавиши на месте '>' в слое #4
-        case ST_MACRO_25:  
+        case ST_MACRO_25:
             if (record->event.pressed) {
-                // При нажатии сразу печатаем ➜
-                SEND_STRING("\u279C");
+                const char* str = "\u279C"; // ➜
+                clear_keyboard();
+                send_string(str);
+                
+                // Эмулируем Copy & Paste
+                register_code(KC_LCTL);
+                register_code(KC_C);
+                unregister_code(KC_C);
+                
+                wait_ms(50); // Небольшая пауза для ОС, чтобы обработать Ctrl+C
+
+                register_code(KC_V);
+                unregister_code(KC_V);
+                
+                unregister_code(KC_LCTL);
             }
-            return false; // мы всё сделали сами, дальше не обрабатываем
+            return false;
 
         case TO(0):
             if (record->event.pressed) layer_move(0);
