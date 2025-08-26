@@ -241,7 +241,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         case ST_MACRO_25:  
             if (record->event.pressed) {
                 // При нажатии сразу печатаем ➜
-                send_unicode_hex_string("279C");
+                SEND_STRING("\u279C");
             }
             return false; // мы всё сделали сами, дальше не обрабатываем
 
