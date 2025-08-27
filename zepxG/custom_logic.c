@@ -240,21 +240,8 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         // Отслеживаем нажатие клавиши на месте '>' в слое #4
         case ST_MACRO_25:
             if (record->event.pressed) {
-                const char* str = "\u279C"; // ➜
-                clear_keyboard();
-                send_string(str);
-                
-                // Эмулируем Copy & Paste
-                register_code(KC_LCTL);
-                register_code(KC_C);
-                unregister_code(KC_C);
-                
-                wait_ms(50); // Небольшая пауза для ОС, чтобы обработать Ctrl+C
-
-                register_code(KC_V);
-                unregister_code(KC_V);
-                
-                unregister_code(KC_LCTL);
+                // Отправляем символ ➜ через Unicode для Windows
+                send_unicode_hex_string("279C"); // ➜
             }
             return false;
 
