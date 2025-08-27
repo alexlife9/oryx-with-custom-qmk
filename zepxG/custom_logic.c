@@ -34,6 +34,7 @@ static uint16_t sha_timer = 0;
 // Переменные для обработки двойного клика RU_SOFT - 'Ь-Ъ'
 static uint16_t soft_timer = 0;
 static uint8_t soft_count = 0;
+static bool soft_pending = false;
 
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
