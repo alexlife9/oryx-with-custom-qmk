@@ -219,16 +219,23 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 }
 
                 if (record->event.pressed) {
-                    if (timer_elapsed(soft_timer) < TAPPING_TERM) {
-                        // Двойное нажатие в пределах времени — печатаем Ъ
-                        tap_code(RU_HARD);
-                    } else {
-                        // Одиночное нажатие — печатаем Ь
-                        tap_code(RU_SOFT);
-                        soft_timer = timer_read(); // Запускаем таймер
+                    if (keycode == RU_SOFT) {
+                        if (soft_pending && timer_elapsed(soft_timer) < TAPPING_TERM) {
+                            // Двойное нажатие в пределах времени — печатаем Ъ
+                            tap_code(RU_HARD);
+                            soft_pending = false; // Сбрасываем флаг
+                        } else {
+                            // Одиночное нажатие — печатаем Ь сразу
+                            tap_code(RU_SOFT);
+                            soft_pending = true; // Устанавливаем флаг ожидания
+                            soft_timer = timer_read(); // Запускаем таймер
+                        }
                     }
+                } else if (soft_pending && timer_elapsed(soft_timer) >= TAPPING_TERM) {
+                    // Если время вышло и флаг активен — сбрасываем
+                    soft_pending = false;
                 }
-            return false;
+                return false;
 
         case TO(0):
             if (record->event.pressed) layer_move(0);
