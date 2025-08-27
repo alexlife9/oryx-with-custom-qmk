@@ -33,7 +33,6 @@ static uint16_t sha_timer = 0;
 
 // Переменные для обработки двойного клика RU_SOFT - 'Ь-Ъ'
 static uint16_t soft_timer = 0;
-static uint8_t soft_count = 0;
 
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
@@ -218,27 +217,22 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 return true; // На других слоях не работаем
             }
             if (record->event.pressed) {
-                if (soft_count == 0) {
-                    // Первое нажатие
-                    soft_timer = timer_read();
-                    soft_count = 1;
+                // Проверяем, было ли предыдущее нажатие 'Ь' совсем недавно.
+                if (timer_elapsed(soft_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // "Исправляем" предыдущее действие.
+                    tap_code(KC_BSPC); // 1. Стираем 'Ь'
+                    tap_code(RU_HARD); // 2. Печатаем 'Ъ'
+
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    soft_timer = 0;
                 } else {
-                    // Второе нажатие
-                    if (timer_elapsed(soft_timer) < CUSTOM_TAPPING_TERM) {
-                        // Быстрое двойное нажатие → 'Ъ'
-                        tap_code(RU_HARD);
-                        soft_count = 0; // сброс
-                    } else {
-                        // Слишком поздно → считаем как новое одиночное
-                        soft_timer = timer_read();
-                        soft_count = 1;
-                    }
-                }
-            } else {
-                // На отпускании проверяем: прошло ли время, и был ли всего один клик
-                if (soft_count == 1 && timer_elapsed(soft_timer) >= CUSTOM_TAPPING_TERM) {
-                    tap_code(RU_SOFT); // одиночное → 'Ь'
-                    soft_count = 0;
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    tap_code(RU_SOFT); // Печатаем 'Ь'
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    soft_timer = timer_read();
                 }
             }
             return false;
