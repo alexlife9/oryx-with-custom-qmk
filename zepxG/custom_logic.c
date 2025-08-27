@@ -215,32 +215,19 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         // Буквы Ь-Ъ с двойным кликом
         case RU_SOFT:
             if (get_highest_layer(layer_state) != 0) {
-                return true; // На других слоях не работаем
-            }
-            if (record->event.pressed) {
-                if (soft_count == 0) {
-                    // Первое нажатие
-                    soft_timer = timer_read();
-                    soft_count = 1;
-                } else {
-                    // Второе нажатие
-                    if (timer_elapsed(soft_timer) < CUSTOM_TAPPING_TERM) {
-                        // Быстрое двойное нажатие → 'Ъ'
+                    return true; // На других слоях не работаем
+                }
+
+                if (record->event.pressed) {
+                    if (timer_elapsed(soft_timer) < TAPPING_TERM) {
+                        // Двойное нажатие в пределах времени — печатаем Ъ
                         tap_code(RU_HARD);
-                        soft_count = 0; // сброс
                     } else {
-                        // Слишком поздно → считаем как новое одиночное
-                        soft_timer = timer_read();
-                        soft_count = 1;
+                        // Одиночное нажатие — печатаем Ь
+                        tap_code(RU_SOFT);
+                        soft_timer = timer_read(); // Запускаем таймер
                     }
                 }
-            } else {
-                // На отпускании проверяем: прошло ли время, и был ли всего один клик
-                if (soft_count == 1 && timer_elapsed(soft_timer) >= CUSTOM_TAPPING_TERM) {
-                    tap_code(RU_SOFT); // одиночное → 'Ь'
-                    soft_count = 0;
-                }
-            }
             return false;
 
         case TO(0):
