@@ -51,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_KP_PLUS,     RU_EF,          RU_YERU,        RU_VE,          RU_A,           RU_PE,          RU_LPRN,                                                                        RU_RPRN,        RU_ER,          RU_O,           RU_EL,          RU_DE,          RU_ZHE,         KC_KP_ASTERISK, 
     KC_KP_MINUS,    RU_YA,          RU_CHE,         RU_ES,          RU_EM,          RU_I,                                           RU_TE,          RU_SOFT,        RU_BE,          RU_HA,          RU_YU,          KC_KP_SLASH,    
     RU_YO,          LCTL(KC_Z),     KC_LEFT_CTRL,   KC_LEFT_SHIFT,  ST_MACRO_4,     KC_ENTER,                                                                                                       KC_BSPC,        RU_DOT,         LCTL(KC_A),     LCTL(LSFT(KC_T)),ST_MACRO_9,     TO(1),          
-    OSM(MOD_LSFT),  TG(2),          TD(DANCE_1),                    MT(MOD_LCTL, KC_DELETE),OSL(3),         KC_SPACE
+    OSM(MOD_LSFT),  TG(2),          OSL(3),                         TD(DANCE_1),    MT(MOD_LCTL, KC_DELETE),KC_SPACE
   ),
   [1] = LAYOUT_moonlander(
     KC_ESCAPE,      KC_HASH,        KC_PERC,        KC_EXLM,        KC_DLR,         KC_AT,          KC_QUOTE,                                       KC_DQUO,        KC_UNDS,        KC_LABK,        KC_QUES,        KC_RABK,        KC_AMPR,        KC_TRANSPARENT, 
@@ -90,12 +90,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 const uint16_t PROGMEM combo0[] = { KC_KP_8, KC_KP_6, COMBO_END};
 const uint16_t PROGMEM combo1[] = { TG(2), KC_ENTER, COMBO_END};
-const uint16_t PROGMEM combo2[] = { OSL(3), KC_BSPC, COMBO_END};
+const uint16_t PROGMEM combo2[] = { MT(MOD_LCTL, KC_DELETE), KC_BSPC, COMBO_END};
+const uint16_t PROGMEM combo3[] = { RU_SHA, RU_EL, COMBO_END};
+const uint16_t PROGMEM combo4[] = { RU_O, RU_SOFT, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo0, LCTL(KC_ENTER)),
     COMBO(combo1, LCTL(KC_ENTER)),
     COMBO(combo2, LCTL(KC_BSPC)),
+    COMBO(combo3, RU_SHCH),
+    COMBO(combo4, RU_HARD),
 };
 
 
@@ -282,9 +286,7 @@ tap_dance_action_t tap_dance_actions[] = {
         [DANCE_1] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_1, dance_1_finished, dance_1_reset),
 };
 
-#include "custom_logic.c"                                            // это первое добавление
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
-    if (!process_record_custom(keycode, record)) { return false; }   // это второе добавление
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case ST_MACRO_0:
     if (record->event.pressed) {
