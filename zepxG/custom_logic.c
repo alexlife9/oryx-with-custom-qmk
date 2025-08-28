@@ -33,8 +33,6 @@ static uint16_t sha_timer = 0;
 
 // Переменные для обработки двойного клика RU_SOFT - 'Ь-Ъ'
 static uint16_t soft_timer = 0;
-static uint8_t soft_count = 0;
-static bool soft_pending = false;
 
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
@@ -216,27 +214,28 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         // Буквы Ь-Ъ с двойным кликом
         case RU_SOFT:
             if (get_highest_layer(layer_state) != 0) {
-                    return true; // На других слоях не работаем
-                }
+                return true; // На других слоях не работаем
+            }
+            if (record->event.pressed) {
+                // Проверяем, было ли предыдущее нажатие 'Ь' совсем недавно.
+                if (timer_elapsed(soft_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // "Исправляем" предыдущее действие.
+                    tap_code(KC_BSPC); // 1. Стираем 'Ь'
+                    tap_code(RU_HARD); // 2. Печатаем 'Ъ'
 
-                if (record->event.pressed) {
-                    if (keycode == RU_SOFT) {
-                        if (soft_pending && timer_elapsed(soft_timer) < TAPPING_TERM) {
-                            // Двойное нажатие в пределах времени — печатаем Ъ
-                            tap_code(RU_HARD);
-                            soft_pending = false; // Сбрасываем флаг
-                        } else {
-                            // Одиночное нажатие — печатаем Ь сразу
-                            tap_code(RU_SOFT);
-                            soft_pending = true; // Устанавливаем флаг ожидания
-                            soft_timer = timer_read(); // Запускаем таймер
-                        }
-                    }
-                } else if (soft_pending && timer_elapsed(soft_timer) >= TAPPING_TERM) {
-                    // Если время вышло и флаг активен — сбрасываем
-                    soft_pending = false;
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    soft_timer = 0;
+                } else {
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    tap_code(RU_SOFT); // Печатаем 'Ь'
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    soft_timer = timer_read();
                 }
-                return false;
+            }
+            return false;
 
         case TO(0):
             if (record->event.pressed) layer_move(0);
