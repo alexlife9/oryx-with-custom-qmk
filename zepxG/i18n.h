@@ -1,3 +1,5 @@
+#define RU_SHCH KC_O
+#define RU_HARD KC_RBRC
 #define RU_PERC S(KC_5)
 #define RU_EXLM S(KC_1)
 #define RU_SHTI KC_Q
@@ -39,5 +41,3 @@
 #define RU_HA KC_LBRC
 #define RU_YU KC_DOT
 #define RU_DOT KC_SLSH
-#define RU_SHCH KC_O
-#define RU_HARD KC_RBRC
