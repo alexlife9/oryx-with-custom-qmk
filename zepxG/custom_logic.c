@@ -203,7 +203,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
-                    tap_code(KC_LABK); // Печатаем '<'
+                    tap_code16(S(KC_COMMA)); // Печатаем '<'
 
                     // Запускаем таймер, чтобы отследить возможное второе нажатие.
                     labk_timer = timer_read();
