@@ -196,10 +196,11 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем <
-                    SEND_STRING((SS_LALT(SS_TAP(X_KP_6) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) ))
-                                "!----"
-                                (SS_LALT(SS_TAP(X_KP_6) SS_TAP(X_KP_2) SS_TAP(X_LEFT_ALT) ))
-                                SS_TAP(X_LEFT) SS_TAP(X_LEFT) SS_TAP(X_LEFT)); // 2. Печатаем <!-- --> и ставим курсор внутрь
+                    SEND_STRING(
+                        SS_LALT(SS_TAP(X_KP_6) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) )
+                        "!----"
+                        SS_LALT(SS_TAP(X_KP_6) SS_TAP(X_KP_2) SS_TAP(X_LEFT_ALT) )
+                        SS_TAP(X_LEFT) SS_TAP(X_LEFT) SS_TAP(X_LEFT)); // 2. Печатаем <!-- --> и ставим курсор внутрь
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     labk_timer = 0;
