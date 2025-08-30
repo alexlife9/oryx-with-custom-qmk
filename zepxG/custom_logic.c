@@ -28,6 +28,9 @@ static uint16_t lcbr_timer = 0;
 // Переменные для обработки двойного клика KC_LBRC - '[-[]'
 static uint16_t lbrc_timer = 0;
 
+// Переменные для обработки двойного клика KC_LABK - '<!-- -->'
+static uint16_t labk_timer = 0;
+
 // Переменные для обработки двойного клика RU_SHA - 'Ш-Щ'
 static uint16_t sha_timer = 0;
 
@@ -184,6 +187,29 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+
+        // Скобка угловая для комментария в РНР "<" с двойным кликом для <!-- -->
+        case KC_LABK:
+            if (record->event.pressed) {
+                // Проверяем, было ли предыдущее нажатие '<' совсем недавно.
+                if (timer_elapsed(labk_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // "Исправляем" предыдущее действие.
+                    tap_code(KC_BSPC);                // 1. Стираем <
+                    SEND_STRING("<!---->" SS_TAP(X_LEFT) SS_TAP(X_LEFT) SS_TAP(X_LEFT)); // 2. Печатаем <!-- --> и ставим курсор внутрь
+
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    labk_timer = 0;
+                } else {
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    tap_code(KC_LABK); // Печатаем '<'
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    labk_timer = timer_read();
+                }
+            }
+            return false;    
 
         // Буквы Ш-Щ с двойным кликом
         case RU_SHA:
