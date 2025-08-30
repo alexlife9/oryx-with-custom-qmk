@@ -93,7 +93,6 @@ const uint16_t PROGMEM combo1[] = { TG(2), KC_ENTER, COMBO_END};
 const uint16_t PROGMEM combo2[] = { MT(MOD_LCTL, KC_DELETE), KC_BSPC, COMBO_END};
 const uint16_t PROGMEM combo3[] = { RU_SHA, RU_EL, COMBO_END};
 const uint16_t PROGMEM combo4[] = { RU_O, RU_SOFT, COMBO_END};
-const uint16_t PROGMEM combo5[] = { RU_QUES, RU_SHA, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo0, LCTL(KC_ENTER)),
@@ -101,7 +100,6 @@ combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo2, LCTL(KC_BSPC)),
     COMBO(combo3, RU_SHCH),
     COMBO(combo4, RU_HARD),
-    COMBO(combo5, RU_SHCH),
 };
 
 
@@ -288,9 +286,7 @@ tap_dance_action_t tap_dance_actions[] = {
         [DANCE_1] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_1, dance_1_finished, dance_1_reset),
 };
 
-#include "custom_logic.c"                                            // это первое добавление
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
-    if (!process_record_custom(keycode, record)) { return false; }   // это второе добавление
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case ST_MACRO_0:
     if (record->event.pressed) {
