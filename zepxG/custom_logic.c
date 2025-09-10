@@ -16,26 +16,35 @@ static bool is_russian_lang_active = true;
 
 #define CUSTOM_TAPPING_TERM 180 // Настраиваемый тайм-аут
 
-// Переменные для обработки двойного клика KC_DQUO - '"-""'
+// Переменные для обработки двойного клика KC_DQUO: "␣"
 static uint16_t dquo_timer = 0;
 
-// Переменные для обработки двойного клика KC_LPRN - '(-()'
+// Переменные для обработки двойного клика KC_LPRN: (␣)
 static uint16_t lprn_timer = 0;
 
-// Переменные для обработки двойного клика KC_LCBR - '{-{}'
+// Переменные для обработки двойного клика KC_LCBR: {␣}
 static uint16_t lcbr_timer = 0;
 
-// Переменные для обработки двойного клика KC_LBRC - '[-[]'
+// Переменные для обработки двойного клика KC_LBRC: [␣]
 static uint16_t lbrc_timer = 0;
 
-// Переменные для обработки двойного клика KC_LABK - '<!-- -->'
+// Переменные для обработки двойного клика KC_LABK: <!--␣-->
 static uint16_t labk_timer = 0;
 
-// Переменные для обработки двойного клика RU_SHA - 'Ш-Щ'
-static uint16_t sha_timer = 0;
+// Переменные для обработки двойного клика KC_KP_ASTERISK: *-•
+static uint16_t asterisk_timer = 0;
 
-// Переменные для обработки двойного клика RU_SOFT - 'Ь-Ъ'
-static uint16_t soft_timer = 0;
+// Переменные для обработки двойного клика KC_KP_MINUS: - –
+static uint16_t minus_timer = 0;
+
+// Переменные для обработки двойного клика LCTL(KC_A): добавляем KC_С
+static uint16_t ctlkca_timer = 0;
+
+// Переменные для обработки двойного клика RU_SHA - Ш-Щ
+//static uint16_t sha_timer = 0;
+
+// Переменные для обработки двойного клика RU_SOFT - Ь-Ъ
+//static uint16_t soft_timer = 0;
 
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
@@ -188,7 +197,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        // Скобка угловая для комментария в РНР "<" с двойным кликом для <!-- -->
+        // Скобка угловая для комментария в РНР '<' с двойным кликом для <!-- -->
         case KC_LABK:
             if (record->event.pressed) {
                 // Проверяем, было ли предыдущее нажатие '<' совсем недавно.
@@ -213,8 +222,77 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     labk_timer = timer_read();
                 }
             }
-            return false;    
+            return false;   
+            
+        // Звездочка '*' с двойным кликом
+        case KC_KP_ASTERISK:
+            if (record->event.pressed) {
+                // Проверяем, было ли предыдущее нажатие '*' совсем недавно.
+                if (timer_elapsed(asterisk_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // "Исправляем" предыдущее действие.
+                    tap_code(KC_BSPC);                // 1. Стираем '*'
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_4) SS_TAP(X_KP_9) SS_TAP(X_LEFT_ALT) )); // 2. Печатаем '•'
 
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    asterisk_timer = 0;
+                } else {
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    tap_code(KC_KP_ASTERISK); // Печатаем '*'
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    asterisk_timer = timer_read();
+                }
+            }
+            return false;
+
+        // Среднее тире '–' по двойныму клику
+        case KC_KP_MINUS:
+            if (record->event.pressed) {
+                // Проверяем, было ли предыдущее нажатие '-' совсем недавно.
+                if (timer_elapsed(minus_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // "Исправляем" предыдущее действие.
+                    tap_code(KC_BSPC);                // 1. Стираем '-'
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_5) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) )); // 2. Печатаем '–'
+
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    minus_timer = 0;
+                } else {
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    tap_code(KC_KP_MINUS); // Печатаем '-'
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    minus_timer = timer_read();
+                }
+            }
+            return false;
+
+        // По двойныму клику LCTL(KC_A): добавляем KC_С
+        case LCTL(KC_A):
+            if (record->event.pressed) {
+                // Проверяем, было ли предыдущее нажатие LCTL(KC_A)
+                if (timer_elapsed(ctlkca_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // Сразу добавляем копирование:
+                    tap_code(LCTL(KC_C));
+
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    ctlkca_timer = 0;
+                } else {
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    tap_code(LCTL(KC_A)); // выполняем LCTL(KC_A)
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    ctlkca_timer = timer_read();
+                }
+            }
+            return false;
+
+/*            
         // Буквы Ш-Щ с двойным кликом
         case RU_SHA:
             if (get_highest_layer(layer_state) != 0) {
@@ -266,6 +344,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+*/
 
         case TO(0):
             if (record->event.pressed) layer_move(0);
