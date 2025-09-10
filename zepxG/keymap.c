@@ -92,6 +92,7 @@ const uint16_t PROGMEM combo2[] = { RU_SHA, RU_EL, COMBO_END};
 const uint16_t PROGMEM combo3[] = { RU_O, RU_SOFT, COMBO_END};
 const uint16_t PROGMEM combo4[] = { LCTL(KC_A), RU_YA, COMBO_END};
 const uint16_t PROGMEM combo5[] = { OSM(MOD_LSFT), RU_ER, COMBO_END};
+const uint16_t PROGMEM combo6[] = { KC_DLR, KC_KP_9, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo0, LCTL(KC_ENTER)),
@@ -100,6 +101,7 @@ combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo3, RU_HARD),
     COMBO(combo4, LCTL(KC_Z)),
     COMBO(combo5, RU_RUBL),
+    COMBO(combo6, RU_RUBL),
 };
 
 
