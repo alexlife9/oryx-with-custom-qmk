@@ -277,14 +277,14 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 if (timer_elapsed(ctlkca_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // Сразу добавляем копирование:
-                    tap_code(LCTL(KC_C));
+                    tap_code16(LCTL(KC_C));
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     ctlkca_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
-                    tap_code(LCTL(KC_A)); // выполняем LCTL(KC_A)
+                    tap_code16(LCTL(KC_A)); // выполняем LCTL(KC_A)
 
                     // Запускаем таймер, чтобы отследить возможное второе нажатие.
                     ctlkca_timer = timer_read();
