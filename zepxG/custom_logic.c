@@ -292,11 +292,42 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
+/*            
         // Добавляем букву Ы с ударением на третьем слое - номер макроса может меняться! 
         case ST_MACRO_13:
             if (record->event.pressed) {
-                SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_4) SS_TAP(X_KP_4) SS_TAP(X_B) ));  
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_4) SS_TAP(X_KP_4) SS_TAP(KC_B) ));  
                 SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) )); 
+            }
+            return false;
+*/
+
+        // Добавляем букву Ы с ударением на третьем слое - номер макроса может меняться! 
+        case ST_MACRO_13:
+            if (record->event.pressed) {
+                // --- Печатаем 'ы' (Unicode U+044B) ---
+                // 1. Зажимаем левый Alt
+                register_code(KC_LALT);
+
+                // 2. Набираем последовательность для Unicode-ввода
+                tap_code(KC_KP_PLUS);
+                tap_code(KC_KP_0);
+                tap_code(KC_KP_4);
+                tap_code(KC_KP_4);
+                tap_code(KC_B); // 'B' является частью HEX-кода
+
+                // 3. Отпускаем левый Alt, чтобы Windows обработала код
+                unregister_code(KC_LALT);
+
+                // --- Добавляем ударение (Unicode U+0301) ---
+                // Повторяем тот же процесс для знака ударения
+                register_code(KC_LALT);
+                tap_code(KC_KP_PLUS);
+                tap_code(KC_KP_0);
+                tap_code(KC_KP_3);
+                tap_code(KC_KP_0);
+                tap_code(KC_KP_1);
+                unregister_code(KC_LALT);
             }
             return false;
 
