@@ -292,6 +292,14 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
+        // Добавляем букву Ы с ударением на третьем слое - номер макроса может меняться! 
+        case ST_MACRO_13:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_4) SS_TAP(X_KP_4) SS_TAP(X_B) ));  
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) )); 
+            }
+            return false;
+
 /*            
         // Буквы Ш-Щ с двойным кликом
         case RU_SHA:
