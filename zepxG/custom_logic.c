@@ -398,10 +398,8 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                         is_russian_lang_active = false; // Синхронизируем флаг обратно
 
                     } else {
-                        // --- КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ ---
+                        // КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ, то ничего переключать не нужно.
                         // Печатаем английскую 'Ú'
-                        // Язык уже английский, ничего переключать не нужно.
-                        // Используем Alt-код для 'Ú' (Alt + 0218)
                         SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_5) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) ));
                     }
                     
