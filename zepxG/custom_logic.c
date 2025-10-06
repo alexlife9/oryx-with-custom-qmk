@@ -370,9 +370,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
                     // Проверяем, активен ли под ним русский слой (слой 0)
                     if (get_base_layer(layer_state) == 0) {
-                        // --- КОНТЕКСТ БЫЛ РУССКИЙ ---
-                        // Печатаем русскую 'у́'
-                        
+                        // --- КОНТЕКСТ БЫЛ РУССКИЙ, то печатаем русскую 'у́'                     
                         // 1. Временно переключаемся на русский
                         register_code(KC_LCTL);
                         register_code(KC_LSFT);
