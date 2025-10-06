@@ -352,13 +352,8 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(RU_YA);
 
                 // Добавляем ударение (Unicode U+0301)
-                register_code(KC_LALT);
-                tap_code(KC_KP_PLUS);
-                tap_code(KC_KP_0);
-                tap_code(KC_KP_3);
-                tap_code(KC_KP_0);
-                tap_code(KC_KP_1);
-                unregister_code(KC_LALT);
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
+
 
                 // Возвращаемся на английский, как и должно быть на 3-м слое
                 register_code(KC_LCTL);
@@ -389,11 +384,11 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                         unregister_code(KC_LCTL);
                         is_russian_lang_active = true;
 
-                        tap_code16(RU_U); // Убедитесь, что #define RU_U KC_E есть
+                        // Печатаем 'у'
+                        tap_code16(RU_U); 
 
-                        register_code(KC_LALT);
-                        tap_code(KC_KP_0); tap_code(KC_KP_3); tap_code(KC_KP_0); tap_code(KC_KP_1);
-                        unregister_code(KC_LALT);
+                        // Добавляем ударение (Unicode U+0301)
+                        SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
 
                         register_code(KC_LCTL);
                         register_code(KC_LSFT);
@@ -404,9 +399,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     } else { // Если last_base_layer был 1 или любой другой
                         // --- КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ ---
                         // Печатаем английскую 'ú' (Alt + 0250)
-                        register_code(KC_LALT);
-                        tap_code(KC_KP_0); tap_code(KC_KP_2); tap_code(KC_KP_5); tap_code(KC_KP_0);
-                        unregister_code(KC_LALT);
+                        SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_5) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) ));
                     }
                     
                     return false;
