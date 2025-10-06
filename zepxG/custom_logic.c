@@ -368,7 +368,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 if (get_highest_layer(layer_state) == 3) {
 
                     // Проверяем, активен ли под ним русский слой (слой 0)
-                    if (layer_state_is_on(layer_state, 0)) {
+                    if (layer_state_is(layer_state, 0)) {
                         // --- КОНТЕКСТ БЫЛ РУССКИЙ ---
                         // Печатаем русскую 'у́'
                         
