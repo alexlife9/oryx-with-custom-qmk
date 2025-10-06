@@ -286,7 +286,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        // Добавляем букву Ы с ударением. На третьем слое - номер макроса может меняться! 
+        // печатаем букву Ы с ударением. На третьем слое - номер макроса может меняться! 
         case ST_MACRO_13:
             if (record->event.pressed) {
 
@@ -313,18 +313,18 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LALT);
 
                 // Возвращаемся на английский, как и должно быть на 3-м слое
-                    register_code(KC_LCTL);
-                    register_code(KC_LSFT);
-                    unregister_code(KC_LSFT);
-                    unregister_code(KC_LCTL);
-                    is_russian_lang_active = false; // Синхронизируем флаг обратно
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+                is_russian_lang_active = false;
 
-                    return false; // Мы обработали нажатие, стандартная логика не нужна
+                return false;
                 }
             }
             return false;
 
-                // Добавляем букву Я с ударением. На третьем слое - номер макроса может меняться! 
+        // печатаем букву Я с ударением. На третьем слое - номер макроса может меняться! 
         case ST_MACRO_16:
             if (record->event.pressed) {
 
@@ -351,24 +351,25 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LALT);
 
                 // Возвращаемся на английский, как и должно быть на 3-м слое
-                    register_code(KC_LCTL);
-                    register_code(KC_LSFT);
-                    unregister_code(KC_LSFT);
-                    unregister_code(KC_LCTL);
-                    is_russian_lang_active = false; // Синхронизируем флаг обратно
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+                is_russian_lang_active = false; // Синхронизируем флаг обратно
 
-                    return false; // Мы обработали нажатие, стандартная логика не нужна
+                return false;
                 }
             }
             return false;    
 
+            // печатаем 'ú-у́' в зависимости от слоя из которого пришли 
             case ST_MACRO_11:
             if (record->event.pressed) {
                 // Работаем только на 3-м слое
                 if (get_highest_layer(layer_state) == 3) {
 
                     // Проверяем, активен ли под ним русский слой (слой 0)
-                    if (layer_state_is(0)) {
+                    if (get_base_layer(layer_state) == 0) {
                         // --- КОНТЕКСТ БЫЛ РУССКИЙ ---
                         // Печатаем русскую 'у́'
                         
