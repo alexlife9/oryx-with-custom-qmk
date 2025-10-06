@@ -299,12 +299,17 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         // Добавляем букву Ы с ударением. На третьем слое - номер макроса может меняться! 
         case ST_MACRO_16:
             if (record->event.pressed) {
-                //сначала меняем язык на русский
+
+                // Проверяем, что мы ТОЧНО на 3-м слое
+                if (get_highest_layer(layer_state) == 3) {
+                    
+                // 1. Временно переключаемся на русский язык
                 register_code(KC_LCTL);
                 register_code(KC_LSFT);
                 unregister_code(KC_LSFT);
                 unregister_code(KC_LCTL);
-                
+                is_russian_lang_active = true; // Важно! Синхронизируем наш флаг
+
                 // Печатаем 'ы'
                 tap_code(RU_YERU);
 
@@ -316,6 +321,16 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 tap_code(KC_KP_0);
                 tap_code(KC_KP_1);
                 unregister_code(KC_LALT);
+
+                // 4. Возвращаемся на английский, как и должно быть на 3-м слое
+                    register_code(KC_LCTL);
+                    register_code(KC_LSFT);
+                    unregister_code(KC_LSFT);
+                    unregister_code(KC_LCTL);
+                    is_russian_lang_active = false; // Синхронизируем флаг обратно
+
+                    return false; // Мы обработали нажатие, стандартная логика не нужна
+                }
             }
             return false;
 
