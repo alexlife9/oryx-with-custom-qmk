@@ -40,9 +40,19 @@ static uint16_t minus_timer = 0;
 // Переменные для обработки двойного клика LCTL(KC_A): добавляем KC_С
 static uint16_t ctlkca_timer = 0;
 
+// Переменная для отслеживания последнего активного базового слоя (0=Рус, 1=Англ)
+static uint8_t last_base_layer = 0;
+
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
 layer_state_t layer_state_set_user(layer_state_t state) {
+
+    uint8_t highest_layer = get_highest_layer(state);
+    // Запоминаем базовый слой, только если мы переключились на 0 или 1
+    if (highest_layer == 0 || highest_layer == 1) {
+        last_base_layer = highest_layer;
+    }
+
     // Определяем желаемый язык: русский, если наивысший слой == 0, иначе английский.
     bool desired_russian = (get_highest_layer(state) == 0);
 
@@ -322,7 +332,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 return false;
                 }
             }
-            return false;
+            return true;
 
         // печатаем букву Я с ударением. На третьем слое - номер макроса может меняться! 
         case ST_MACRO_16:
@@ -360,7 +370,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 return false;
                 }
             }
-            return false;    
+            return true;    
 
             // печатаем 'ú-у́' в зависимости от слоя из которого пришли 
             case ST_MACRO_11:
@@ -368,38 +378,35 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 // Работаем только на 3-м слое
                 if (get_highest_layer(layer_state) == 3) {
 
-                    // Проверяем, активен ли под ним русский слой (слой 0)
-                    if (get_base_layer(layer_state) == 0) {
-                        // --- КОНТЕКСТ БЫЛ РУССКИЙ, то печатаем русскую 'у́'                     
-                        // 1. Временно переключаемся на русский
+                    // *** ИСПОЛЬЗУЕМ НАШУ ПЕРЕМЕННУЮ ***
+                    if (last_base_layer == 0) {
+                        // --- КОНТЕКСТ БЫЛ РУССКИЙ ---
+                        // Печатаем русскую 'у́'
+                        
                         register_code(KC_LCTL);
                         register_code(KC_LSFT);
                         unregister_code(KC_LSFT);
                         unregister_code(KC_LCTL);
-                        is_russian_lang_active = true; // Синхронизируем флаг
+                        is_russian_lang_active = true;
 
-                        // 2. Печатаем 'у'
-                        tap_code16(RU_U);
+                        tap_code16(RU_U); // Убедитесь, что #define RU_U KC_E есть
 
-                        // 3. Добавляем ударение (U+0301)
                         register_code(KC_LALT);
-                        tap_code(KC_KP_0);
-                        tap_code(KC_KP_3);
-                        tap_code(KC_KP_0);
-                        tap_code(KC_KP_1);
+                        tap_code(KC_KP_0); tap_code(KC_KP_3); tap_code(KC_KP_0); tap_code(KC_KP_1);
                         unregister_code(KC_LALT);
 
-                        // 4. Возвращаемся на английский (язык по умолчанию для 3-го слоя)
                         register_code(KC_LCTL);
                         register_code(KC_LSFT);
                         unregister_code(KC_LSFT);
                         unregister_code(KC_LCTL);
-                        is_russian_lang_active = false; // Синхронизируем флаг обратно
+                        is_russian_lang_active = false;
 
-                    } else {
-                        // КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ, то ничего переключать не нужно.
-                        // Печатаем английскую 'Ú'
-                        SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_5) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) ));
+                    } else { // Если last_base_layer был 1 или любой другой
+                        // --- КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ ---
+                        // Печатаем английскую 'ú' (Alt + 0250)
+                        register_code(KC_LALT);
+                        tap_code(KC_KP_0); tap_code(KC_KP_2); tap_code(KC_KP_5); tap_code(KC_KP_0);
+                        unregister_code(KC_LALT);
                     }
                     
                     return false;
