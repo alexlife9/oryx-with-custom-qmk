@@ -368,7 +368,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 if (get_highest_layer(layer_state) == 3) {
 
                     // Проверяем, активен ли под ним русский слой (слой 0)
-                    if (layer_state_is(layer_state, 0)) {
+                    if (layer_state_is(0)) {
                         // --- КОНТЕКСТ БЫЛ РУССКИЙ ---
                         // Печатаем русскую 'у́'
                         
@@ -402,18 +402,12 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                         // Печатаем английскую 'Ú'
                         // Язык уже английский, ничего переключать не нужно.
                         // Используем Alt-код для 'Ú' (Alt + 0218)
-                        register_code(KC_LALT);
-                        tap_code(KC_KP_0);
-                        tap_code(KC_KP_2);
-                        tap_code(KC_KP_1);
-                        tap_code(KC_KP_8);
-                        unregister_code(KC_LALT);
+                        SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_5) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) ));
                     }
                     
-                    return false; // Мы всё обработали, стандартный макрос не нужен
+                    return false;
                 }
             }
-            // Если не на 3-м слое, пусть работает стандартная логика
             return true;
 
         case TO(0):
