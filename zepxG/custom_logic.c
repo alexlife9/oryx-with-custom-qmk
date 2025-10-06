@@ -40,12 +40,6 @@ static uint16_t minus_timer = 0;
 // Переменные для обработки двойного клика LCTL(KC_A): добавляем KC_С
 static uint16_t ctlkca_timer = 0;
 
-// Переменные для обработки двойного клика RU_SHA - Ш-Щ
-//static uint16_t sha_timer = 0;
-
-// Переменные для обработки двойного клика RU_SOFT - Ь-Ъ
-//static uint16_t soft_timer = 0;
-
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -302,25 +296,21 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             return false;
 */
 
-        // Добавляем букву Ы с ударением на третьем слое - номер макроса может меняться! 
-        case ST_MACRO_13:
+        // Добавляем букву Ы с ударением. На третьем слое - номер макроса может меняться! 
+        case ST_MACRO_16:
             if (record->event.pressed) {
-                // --- Печатаем 'ы' (Unicode U+044B) ---
-                // 1. Зажимаем левый Alt
-                register_code(KC_LALT);
+                //сначала меняем язык на русский
+                    if (is_russian_lang_active != desired_russian) {
+                        register_code(KC_LCTL);
+                        register_code(KC_LSFT);
+                        unregister_code(KC_LSFT);
+                        unregister_code(KC_LCTL);
+                        is_russian_lang_active = desired_russian;
+                    }
+                // Печатаем 'ы'
+                tap_code(RU_YERU);
 
-                // 2. Набираем последовательность для Unicode-ввода
-                tap_code(KC_KP_PLUS);
-                tap_code(KC_KP_0);
-                tap_code(KC_KP_4);
-                tap_code(KC_KP_4);
-                tap_code(KC_B); // 'B' является частью HEX-кода
-
-                // 3. Отпускаем левый Alt, чтобы Windows обработала код
-                unregister_code(KC_LALT);
-
-                // --- Добавляем ударение (Unicode U+0301) ---
-                // Повторяем тот же процесс для знака ударения
+                // Добавляем ударение (Unicode U+0301)
                 register_code(KC_LALT);
                 tap_code(KC_KP_PLUS);
                 tap_code(KC_KP_0);
@@ -330,60 +320,6 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LALT);
             }
             return false;
-
-/*            
-        // Буквы Ш-Щ с двойным кликом
-        case RU_SHA:
-            if (get_highest_layer(layer_state) != 0) {
-                return true; // На других слоях не работаем
-            }
-            if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие 'Ш' совсем недавно.
-                if (timer_elapsed(sha_timer) < CUSTOM_TAPPING_TERM) {
-                    // ДА, это двойное нажатие.
-                    // "Исправляем" предыдущее действие.
-                    tap_code(KC_BSPC); // 1. Стираем 'Ш'
-                    tap_code(RU_SHCH); // 2. Печатаем 'Щ'
-
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
-                    sha_timer = 0;
-                } else {
-                    // НЕТ, это одиночное нажатие.
-                    // Действуем немедленно.
-                    tap_code(RU_SHA); // Печатаем 'Ш'
-
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
-                    sha_timer = timer_read();
-                }
-            }
-            return false;
-
-        // Буквы Ь-Ъ с двойным кликом
-        case RU_SOFT:
-            if (get_highest_layer(layer_state) != 0) {
-                return true; // На других слоях не работаем
-            }
-            if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие 'Ь' совсем недавно.
-                if (timer_elapsed(soft_timer) < CUSTOM_TAPPING_TERM) {
-                    // ДА, это двойное нажатие.
-                    // "Исправляем" предыдущее действие.
-                    tap_code(KC_BSPC); // 1. Стираем 'Ь'
-                    tap_code(RU_HARD); // 2. Печатаем 'Ъ'
-
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
-                    soft_timer = 0;
-                } else {
-                    // НЕТ, это одиночное нажатие.
-                    // Действуем немедленно.
-                    tap_code(RU_SOFT); // Печатаем 'Ь'
-
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
-                    soft_timer = timer_read();
-                }
-            }
-            return false;
-*/
 
         case TO(0):
             if (record->event.pressed) layer_move(0);
