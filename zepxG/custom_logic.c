@@ -290,7 +290,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         // Добавляем букву Ы с ударением на третьем слое - номер макроса может меняться! 
         case ST_MACRO_13:
             if (record->event.pressed) {
-                SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_4) SS_TAP(X_KP_4) SS_TAP(KC_B) ));  
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_4) SS_TAP(X_KP_4) SS_TAP(KC_KP_B) ));  //KC_B
                 SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) )); 
             }
             return false;
@@ -311,7 +311,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 is_russian_lang_active = true; // Важно! Синхронизируем наш флаг
 
                 // Печатаем 'ы'
-                tap_code(RU_YERU);
+                SEND_STRING("Ы");
 
                 // Добавляем ударение (Unicode U+0301)
                 register_code(KC_LALT);
