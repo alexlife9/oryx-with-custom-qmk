@@ -300,12 +300,8 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         case ST_MACRO_16:
             if (record->event.pressed) {
                 //сначала меняем язык на русский
-                    if (is_russian_lang_active != desired_russian) {
-                        register_code(KC_LCTL);
-                        register_code(KC_LSFT);
-                        unregister_code(KC_LSFT);
-                        unregister_code(KC_LCTL);
-                        is_russian_lang_active = desired_russian;
+                    if (get_highest_layer(layer_state) != 3) {
+                        return true; // На других слоях не работаем
                     }
                 // Печатаем 'ы'
                 tap_code(RU_YERU);
