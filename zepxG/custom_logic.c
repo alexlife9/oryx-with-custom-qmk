@@ -43,6 +43,14 @@ static uint16_t ctlkca_timer = 0;
 // Переменная для отслеживания последнего активного базового слоя (0=Рус, 1=Англ)
 static uint8_t last_base_layer = 0;
 
+// Отправляет в ОС комбинацию клавиш для переключения языка (Ctrl+Shift)
+void switch_lang(void) {
+    register_code(KC_LCTL);
+    register_code(KC_LSFT);
+    unregister_code(KC_LSFT);
+    unregister_code(KC_LCTL);
+}
+
 // Callback функция для обработки изменений состояния слоёв.
 // Вызывается автоматически QMK каждый раз, когда меняется активный слой (например, при активации/деактивации через TT, OSL, TO).
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -58,10 +66,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
     // Если текущий язык не совпадает с желаемым, переключаем его в ОС и обновляем флаг.
     if (is_russian_lang_active != desired_russian) {
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
+        switch_lang();
         is_russian_lang_active = desired_russian;
     }
 
@@ -296,116 +301,216 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        // печатаем букву Ы с ударением. На третьем слое - номер макроса может меняться! 
+
+        // !! ВНИМАТЕЛЬНО – на третьем слое номер макроса может меняться!!
+
+        // печатаем 'ы́'
         case ST_MACRO_13:
             if (record->event.pressed) {
 
                 // Проверяем, что мы ТОЧНО на 3-м слое
                 if (get_highest_layer(layer_state) == 3) {
                     
-                // Временно переключаемся на русский язык
-                register_code(KC_LCTL);
-                register_code(KC_LSFT);
-                unregister_code(KC_LSFT);
-                unregister_code(KC_LCTL);
-                is_russian_lang_active = true; // Важно! Синхронизируем наш флаг
+                    // Временно переключаемся на русский язык
+                    switch_lang();
+                    is_russian_lang_active = true; // Важно! Синхронизируем наш флаг
 
-                // Печатаем 'ы'
-                tap_code16(RU_YERU);
+                    // Печатаем 'ы'
+                    tap_code16(RU_YERU);
 
-                // Добавляем ударение (Unicode U+0301)
-                register_code(KC_LALT);
-                tap_code(KC_KP_PLUS);
-                tap_code(KC_KP_0);
-                tap_code(KC_KP_3);
-                tap_code(KC_KP_0);
-                tap_code(KC_KP_1);
-                unregister_code(KC_LALT);
+                    // Добавляем ударение (Unicode U+0301)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
 
-                // Возвращаемся на английский, как и должно быть на 3-м слое
-                register_code(KC_LCTL);
-                register_code(KC_LSFT);
-                unregister_code(KC_LSFT);
-                unregister_code(KC_LCTL);
-                is_russian_lang_active = false;
+                    // Возвращаемся на английский, как и должно быть на 3-м слое
+                    switch_lang();
+                    is_russian_lang_active = false;
 
-                return false;
+                    return false;
                 }
             }
             return true;
 
-        // печатаем букву Я с ударением. На третьем слое - номер макроса может меняться! 
+        // печатаем 'я́'
         case ST_MACRO_16:
             if (record->event.pressed) {
 
                 // Проверяем, что мы ТОЧНО на 3-м слое
                 if (get_highest_layer(layer_state) == 3) {
                     
-                // Временно переключаемся на русский язык
-                register_code(KC_LCTL);
-                register_code(KC_LSFT);
-                unregister_code(KC_LSFT);
-                unregister_code(KC_LCTL);
-                is_russian_lang_active = true; // Важно! Синхронизируем наш флаг
+                    // Временно переключаемся на русский язык
+                    switch_lang();
+                    is_russian_lang_active = true; // Важно! Синхронизируем наш флаг
 
-                // Печатаем 'я'
-                tap_code16(RU_YA);
+                    // Печатаем 'я'
+                    tap_code16(RU_YA);
 
-                // Добавляем ударение (Unicode U+0301)
-                SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
+                    // Добавляем ударение (Unicode U+0301)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
 
 
-                // Возвращаемся на английский, как и должно быть на 3-м слое
-                register_code(KC_LCTL);
-                register_code(KC_LSFT);
-                unregister_code(KC_LSFT);
-                unregister_code(KC_LCTL);
-                is_russian_lang_active = false; // Синхронизируем флаг обратно
+                    // Возвращаемся на английский, как и должно быть на 3-м слое
+                    switch_lang();
+                    is_russian_lang_active = false; // Синхронизируем флаг обратно
 
-                return false;
+                    return false;
                 }
             }
             return true;    
 
-            // печатаем 'ú-у́' в зависимости от слоя из которого пришли 
-            case ST_MACRO_11:
-            if (record->event.pressed) {
-                // Работаем только на 3-м слое
-                if (get_highest_layer(layer_state) == 3) {
+        // печатаем 'ú-у́' в зависимости от слоя из которого пришли 
+        case ST_MACRO_11:
+        if (record->event.pressed) {
+            // Работаем только на 3-м слое
+            if (get_highest_layer(layer_state) == 3) {
 
-                    // *** ИСПОЛЬЗУЕМ НАШУ ПЕРЕМЕННУЮ ***
-                    if (last_base_layer == 0) {
-                        // --- КОНТЕКСТ БЫЛ РУССКИЙ ---
-                        // Печатаем русскую 'у́'
-                        
-                        register_code(KC_LCTL);
-                        register_code(KC_LSFT);
-                        unregister_code(KC_LSFT);
-                        unregister_code(KC_LCTL);
-                        is_russian_lang_active = true;
+                // узнаём слой из которого пришли
+                if (last_base_layer == 0) {
+                    // Если КОНТЕКСТ БЫЛ РУССКИЙ, то будем печатать русскую 'у́'
+                    switch_lang(); // переключаем язык на русский
+                    is_russian_lang_active = true; // активируем флаг
 
-                        // Печатаем 'у'
-                        tap_code16(RU_U); 
+                    // Печатаем 'у'
+                    tap_code16(RU_U); 
 
-                        // Добавляем ударение (Unicode U+0301)
-                        SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
+                    // Добавляем ударение (Unicode U+0301)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
 
-                        register_code(KC_LCTL);
-                        register_code(KC_LSFT);
-                        unregister_code(KC_LSFT);
-                        unregister_code(KC_LCTL);
-                        is_russian_lang_active = false;
+                    switch_lang(); // переключаем язык обратно на английский
+                    is_russian_lang_active = false; // выключаем флаг
 
-                    } else { // Если last_base_layer был 1 или любой другой
-                        // --- КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ ---
-                        // Печатаем английскую 'ú' (Alt + 0250)
-                        SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_5) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) ));
-                    }
-                    
-                    return false;
+                } else { // Если last_base_layer был 1 или любой другой, 
+                    // то КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ и сразу будем печатать английскую 'ú' (Alt + 0250)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_5) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) ));
                 }
+                
+                return false;
             }
-            return true;
+        }
+        return true;
+
+        // печатаем 'é-é' в зависимости от слоя из которого пришли 
+        case ST_MACRO_12:
+        if (record->event.pressed) {
+            // Работаем только на 3-м слое
+            if (get_highest_layer(layer_state) == 3) {
+
+                // узнаём слой из которого пришли
+                if (last_base_layer == 0) {
+                    // Если КОНТЕКСТ БЫЛ РУССКИЙ, то будем печатать русскую 'é'
+                    switch_lang(); // переключаем язык на русский
+                    is_russian_lang_active = true; // активируем флаг
+
+                    // Печатаем 'е'
+                    tap_code16(RU_IE); 
+
+                    // Добавляем ударение (Unicode U+0301)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
+
+                    switch_lang(); // переключаем язык обратно на английский
+                    is_russian_lang_active = false; // выключаем флаг
+
+                } else { // Если last_base_layer был 1 или любой другой, 
+                    // то КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ и сразу будем печатать английскую 'é' (Alt + 0233)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_3) SS_TAP(X_KP_3) SS_TAP(X_LEFT_ALT) ));
+                }
+                
+                return false;
+            }
+        }
+        return true;
+
+        // печатаем 'á-á' в зависимости от слоя из которого пришли 
+        case ST_MACRO_15:
+        if (record->event.pressed) {
+            // Работаем только на 3-м слое
+            if (get_highest_layer(layer_state) == 3) {
+
+                // узнаём слой из которого пришли
+                if (last_base_layer == 0) {
+                    // Если КОНТЕКСТ БЫЛ РУССКИЙ, то будем печатать русскую 'á'
+                    switch_lang(); // переключаем язык на русский
+                    is_russian_lang_active = true; // активируем флаг
+
+                    // Печатаем 'а'
+                    tap_code16(RU_A); 
+
+                    // Добавляем ударение (Unicode U+0301)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
+
+                    switch_lang(); // переключаем язык обратно на английский
+                    is_russian_lang_active = false; // выключаем флаг
+
+                } else { // Если last_base_layer был 1 или любой другой, 
+                    // то КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ и сразу будем печатать английскую 'á' (Alt + 0225)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_2) SS_TAP(X_KP_5) SS_TAP(X_LEFT_ALT) ));
+                }
+                
+                return false;
+            }
+        }
+        return true;
+
+        // печатаем 'ó-ó' в зависимости от слоя из которого пришли 
+        case ST_MACRO_19:
+        if (record->event.pressed) {
+            // Работаем только на 3-м слое
+            if (get_highest_layer(layer_state) == 3) {
+
+                // узнаём слой из которого пришли
+                if (last_base_layer == 0) {
+                    // Если КОНТЕКСТ БЫЛ РУССКИЙ, то будем печатать русскую 'ó'
+                    switch_lang(); // переключаем язык на русский
+                    is_russian_lang_active = true; // активируем флаг
+
+                    // Печатаем 'о'
+                    tap_code16(RU_O); 
+
+                    // Добавляем ударение (Unicode U+0301)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
+
+                    switch_lang(); // переключаем язык обратно на английский
+                    is_russian_lang_active = false; // выключаем флаг
+
+                } else { // Если last_base_layer был 1 или любой другой, 
+                    // то КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ и сразу будем печатать английскую 'ó' (Alt + 0243)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_3) SS_TAP(X_LEFT_ALT) ));
+                }
+                
+                return false;
+            }
+        }
+        return true;
+
+        // печатаем 'í-и́' в зависимости от слоя из которого пришли 
+        case ST_MACRO_17:
+        if (record->event.pressed) {
+            // Работаем только на 3-м слое
+            if (get_highest_layer(layer_state) == 3) {
+
+                // узнаём слой из которого пришли
+                if (last_base_layer == 0) {
+                    // Если КОНТЕКСТ БЫЛ РУССКИЙ, то будем печатать русскую 'и́'
+                    switch_lang(); // переключаем язык на русский
+                    is_russian_lang_active = true; // активируем флаг
+
+                    // Печатаем 'и'
+                    tap_code16(RU_I); 
+
+                    // Добавляем ударение (Unicode U+0301)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
+
+                    switch_lang(); // переключаем язык обратно на английский
+                    is_russian_lang_active = false; // выключаем флаг
+
+                } else { // Если last_base_layer был 1 или любой другой, 
+                    // то КОНТЕКСТ БЫЛ АНГЛИЙСКИЙ и сразу будем печатать английскую 'í' (Alt + 0237)
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_3) SS_TAP(X_KP_7) SS_TAP(X_LEFT_ALT) ));
+                }
+                
+                return false;
+            }
+        }
+        return true;
 
         case TO(0):
             if (record->event.pressed) layer_move(0);
