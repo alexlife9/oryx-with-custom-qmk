@@ -79,6 +79,37 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 
+        // печатаем запятую с пробелом в зависимости от слоя из которого пришли 
+        case ST_MACRO_4:
+            if (record->event.pressed) {
+                
+                uint8_t current_layer = get_highest_layer(layer_state);
+
+                // Условие 1: Мы сейчас на русском слое (слой 0)
+                //      ИЛИ
+                // Условие 2: Мы сейчас на слое #2 И пришли с русского слоя (last_base_layer == 0)
+                if ((current_layer == 0) || (current_layer == 2 && last_base_layer == 0)) {
+                    
+                    // печатаем русскую запятую и ставим пробел
+                    tap_code16(RU_COMM);
+                    tap_code16(KC_SPACE);
+
+                } 
+
+                // Условие 3: Мы сейчас на английском слое (слой 1)
+                //      ИЛИ
+                // Условие 4: Мы сейчас на слое #2 И пришли с английского слоя (last_base_layer == 1)
+                else if ((current_layer == 1) || (current_layer == 2 && last_base_layer == 1)) {
+                    
+                    // печатаем английскую запятую и ставим пробел
+                    tap_code16(KC_COMM);
+                    tap_code16(KC_SPACE);
+                }
+                
+                return false; 
+            }
+            return true;
+
         // Кавычки " с двойным кликом на рус слое
         case RU_DQUO:
             if (get_highest_layer(layer_state) != 0) {
