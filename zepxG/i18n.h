@@ -42,3 +42,4 @@
 #define RU_HA KC_LBRC
 #define RU_YU KC_DOT
 #define RU_DOT KC_SLSH
+#define RU_COMM S(KC_SLSH)
