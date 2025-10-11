@@ -561,7 +561,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true;
 
         // печатаем 'нет' на 4-м слое 
-        case ST_MACRO_23:
+        case ST_MACRO_24:
         if (record->event.pressed) {
             // Работаем только на 4-м слое
             if (get_highest_layer(layer_state) == 4) {
