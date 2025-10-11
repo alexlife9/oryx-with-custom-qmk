@@ -73,7 +73,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state; // Возвращаем состояние слоёв без изменений.
 }
 
-// Наша главная кастомная функция-обработчик.
 // Она перехватывает нажатия кнопок до того, как их обработает стандартная логика Oryx.
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
@@ -86,23 +85,18 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 uint8_t current_layer = get_highest_layer(layer_state);
 
                 // Условие 1: Мы сейчас на русском слое (слой 0)
-                //      ИЛИ
-                // Условие 2: Мы сейчас на слое #2 И пришли с русского слоя (last_base_layer == 0)
-                if ((current_layer == 0) || (current_layer == 2 && last_base_layer == 0)) {
+                if (current_layer == 0) {
                     
                     // печатаем русскую запятую и ставим пробел
                     tap_code16(RU_COMM);
                     tap_code16(KC_SPACE);
-
                 } 
 
-                // Условие 3: Мы сейчас на английском слое (слой 1)
-                //      ИЛИ
-                // Условие 4: Мы сейчас на слое #2 И пришли с английского слоя (last_base_layer == 1)
-                else if ((current_layer == 1) || (current_layer == 2 && last_base_layer == 1)) {
+                // Условие 2: Мы сейчас на английском слое (слой 1)
+                else if (current_layer == 1) {
                     
                     // печатаем английскую запятую и ставим пробел
-                    tap_code16(KC_COMM);
+                    tap_code16(KC_COMMA);
                     tap_code16(KC_SPACE);
                 }
                 
