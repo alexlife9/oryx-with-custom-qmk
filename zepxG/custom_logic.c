@@ -79,7 +79,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 
         // печатаем запятую с пробелом в зависимости от слоя из которого пришли 
-        case ST_MACRO_4:
+        case ST_MACRO_4: // слой [0]: строка 5, столбец 5
             if (record->event.pressed) {
                 
                 uint8_t current_layer = get_highest_layer(layer_state);
@@ -326,11 +326,31 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
+        // Замена # на № с двойным кликом
+        case ST_MACRO_0:
+            if (record->event.pressed) {
 
-        // !! ВНИМАТЕЛЬНО – на третьем слое номер макроса может меняться!!
+                // Проверяем, было ли предыдущее нажатие LCTL(KC_A)
+                if (timer_elapsed(ctlkca_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // Сразу печатаем №:
+                    tap_code16(RU_NUM);
+
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    ctlkca_timer = 0;
+                } else {
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_3) SS_TAP(X_KP_5) SS_TAP(X_LEFT_ALT) )); // печатаем #
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    ctlkca_timer = timer_read();
+                }
+            }
+            return false;
 
         // печатаем 'ы́'
-        case ST_MACRO_13:
+        case ST_MACRO_13: // слой [3]: строка 3, столбец 3
             if (record->event.pressed) {
 
                 // Проверяем, что мы ТОЧНО на 3-м слое
@@ -356,7 +376,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             return true;
 
         // печатаем 'я́'
-        case ST_MACRO_16:
+        case ST_MACRO_16: // слой [0]: строка 4, столбец 2
             if (record->event.pressed) {
 
                 // Проверяем, что мы ТОЧНО на 3-м слое
@@ -383,7 +403,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             return true;    
 
         // печатаем 'ú-у́' в зависимости от слоя из которого пришли 
-        case ST_MACRO_11:
+        case ST_MACRO_11: // слой [3]: строка 2, столбец 4
         if (record->event.pressed) {
             // Работаем только на 3-м слое
             if (get_highest_layer(layer_state) == 3) {
@@ -414,7 +434,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true;
 
         // печатаем 'é-é' в зависимости от слоя из которого пришли 
-        case ST_MACRO_12:
+        case ST_MACRO_12: // слой [3]: строка 2, столбец 6
         if (record->event.pressed) {
             // Работаем только на 3-м слое
             if (get_highest_layer(layer_state) == 3) {
@@ -445,7 +465,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true;
 
         // печатаем 'á-á' в зависимости от слоя из которого пришли 
-        case ST_MACRO_15:
+        case ST_MACRO_15: // слой [3]: строка 3, столбец 5
         if (record->event.pressed) {
             // Работаем только на 3-м слое
             if (get_highest_layer(layer_state) == 3) {
@@ -476,7 +496,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true;
 
         // печатаем 'ó-ó' в зависимости от слоя из которого пришли 
-        case ST_MACRO_19:
+        case ST_MACRO_19: // слой [3] (правая часть): строка 3, столбец 3
         if (record->event.pressed) {
             // Работаем только на 3-м слое
             if (get_highest_layer(layer_state) == 3) {
@@ -507,7 +527,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true;
 
         // печатаем 'í-и́' в зависимости от слоя из которого пришли 
-        case ST_MACRO_17:
+        case ST_MACRO_17:  // слой [3]: строка 4, столбец 6
         if (record->event.pressed) {
             // Работаем только на 3-м слое
             if (get_highest_layer(layer_state) == 3) {
@@ -538,7 +558,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true;
 
         // печатаем 'да' на 4-м слое 
-        case ST_MACRO_22:
+        case ST_MACRO_22: // слой [4]: строка 5, столбец 3
         if (record->event.pressed) {
             // Работаем только на 4-м слое
             if (get_highest_layer(layer_state) == 4) {
@@ -561,7 +581,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true;
 
         // печатаем 'нет' на 4-м слое 
-        case ST_MACRO_24:
+        case ST_MACRO_24: // слой [4]: строка 5, столбец 5
         if (record->event.pressed) {
             // Работаем только на 4-м слое
             if (get_highest_layer(layer_state) == 4) {
