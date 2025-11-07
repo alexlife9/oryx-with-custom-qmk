@@ -287,7 +287,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 // Проверяем, было ли предыдущее нажатие '-' совсем недавно.
                 if (timer_elapsed(minus_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
-                    // "Исправляем" предыдущее действие.
+                    // "Исправляем" предыдущее действие:
                     tap_code(KC_BSPC);                // 1. Стираем '-'
                     SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_5) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) )); // 2. Печатаем '–'
 
@@ -330,24 +330,49 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         case ST_MACRO_0:
             if (record->event.pressed) {
 
-                // Проверяем, было ли предыдущее нажатие LCTL(KC_A)
+                // Проверяем, было ли предыдущее нажатие 
                 if (timer_elapsed(ctlkca_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
-                    // Сразу печатаем №:
-                    tap_code16(RU_NUM);
+                    // "Исправляем" предыдущее действие:
+                    tap_code(KC_BSPC); // стираем '#'
+                    tap_code16(RU_NUM); // и печатаем '№'
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     ctlkca_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
-                    SEND_STRING(SS_LALT(SS_TAP(X_KP_3) SS_TAP(X_KP_5) SS_TAP(X_LEFT_ALT) )); // печатаем #
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_3) SS_TAP(X_KP_5) SS_TAP(X_LEFT_ALT))); // печатаем '#'
 
                     // Запускаем таймер, чтобы отследить возможное второе нажатие.
                     ctlkca_timer = timer_read();
                 }
             }
             return false;
+
+        // Замена $ на ₽ с двойным кликом
+        case ST_MACRO_1:
+            if (record->event.pressed) {
+
+                // Проверяем, было ли предыдущее нажатие LCTL(KC_A)
+                if (timer_elapsed(ctlkca_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // "Исправляем" предыдущее действие:
+                    tap_code(KC_BSPC); // стираем '$'
+                    tap_code16(RU_RUBL); // и печатаем '₽'
+
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    ctlkca_timer = 0;
+                } else {
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_3) SS_TAP(X_KP_6) SS_TAP(X_LEFT_ALT) )); // печатаем '$'
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    ctlkca_timer = timer_read();
+                }
+            }
+            return false;    
 
         // печатаем 'ы́'
         case ST_MACRO_13: // слой [3]: строка 3, столбец 3
