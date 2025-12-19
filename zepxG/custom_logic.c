@@ -40,6 +40,9 @@ static uint16_t minus_timer = 0;
 // Переменные для обработки двойного клика LCTL(KC_A): добавляем KC_С
 static uint16_t ctlkca_timer = 0;
 
+// Флаг для одноразового включения RGB эффекта
+static bool is_rgb_init_done = false;
+
 // Переменная для отслеживания последнего активного базового слоя (0=Рус, 1=Англ)
 static uint8_t last_base_layer = 0;
 
@@ -641,17 +644,5 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             if (!record->event.pressed) return true;
             return true;
 
-        void keyboard_post_init_user(void) {
-            // 1. Принудительно включаем RGB систему
-            rgb_matrix_enable();
-
-            // 2. Устанавливаем режим "Solid Reactive Simple"
-            // Это тот самый эффект, который включен в config.h
-            rgb_matrix_mode(RGB_MATRIX_SOLID_REACTIVE);
-            
-            // 3. (Опционально) Устанавливаем базовый цвет (например, белый), 
-            // если эффект требует базового цвета.
-            rgb_matrix_sethsv(HSV_WHITE);
-        }
     }
 }

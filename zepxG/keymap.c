@@ -332,6 +332,15 @@ tap_dance_action_t tap_dance_actions[] = {
 
 #include "custom_logic.c"                                            // это первое добавление
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
+      // === ЛОГИКА АВТОЗАПУСКА RGB ===
+    // Сработает только один раз при самом первом нажатии любой кнопки
+    if (!is_rgb_init_done) {
+        rgb_matrix_enable(); // Включаем подсветку
+        rgb_matrix_mode(RGB_MATRIX_SOLID_REACTIVE); // Включаем режим "Капли"
+        is_rgb_init_done = true; // Запоминаем, что уже включили
+    }
+    // ==============================
+
     if (!process_record_custom(keycode, record)) { return false; }   // это второе добавление
   switch (keycode) {
     case ST_MACRO_0:
