@@ -622,29 +622,6 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         }
         return true;
 
-        // печатаем 'нет' на 4-м слое 
-        case ST_MACRO_24: // слой [4]: строка 5, столбец 5
-        if (record->event.pressed) {
-            // Работаем только на 4-м слое
-            if (get_highest_layer(layer_state) == 4) {
-
-                // узнаём слой из которого пришли
-                if (last_base_layer == 0) {
-                    // Если КОНТЕКСТ БЫЛ РУССКИЙ, то будем печатать русскую 'и́'
-                    switch_lang(); // переключаем язык на русский
-                    is_russian_lang_active = true; // активируем флаг
-
-                    // Печатаем 'нет' и сразу прожимаем энтер
-                    SEND_STRING(SS_TAP(X_Y) SS_TAP(X_T) SS_TAP(X_N) SS_DELAY(100) SS_TAP(X_ENTER));
-
-                    switch_lang(); // переключаем язык обратно на английский
-                    is_russian_lang_active = false; // выключаем флаг
-                    }                 
-                return false;
-            }
-        }
-        return true;
-
         case TO(0):
             if (record->event.pressed) layer_move(0);
             return false;
