@@ -40,8 +40,6 @@ static uint16_t minus_timer = 0;
 // Переменные для обработки двойного клика LCTL(KC_A): добавляем KC_С
 static uint16_t ctlkca_timer = 0;
 
-// Флаг для одноразового включения RGB эффекта
-static bool is_rgb_init_done = false;
 
 // Переменная для отслеживания последнего активного базового слоя (0=Рус, 1=Англ)
 static uint8_t last_base_layer = 0;
@@ -79,6 +77,22 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Она перехватывает нажатия кнопок до того, как их обработает стандартная логика Oryx.
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
+    
+    // Объявляем, что эти переменные существуют где-то в другом месте (в keymap.c)
+    extern int8_t active_splash_led;
+    extern uint16_t splash_timer;
+
+    // Ловим нажатие для вспышки
+    if (record->event.pressed) {
+        uint8_t row = record->event.key.row;
+        uint8_t col = record->event.key.col;
+        int8_t led = g_led_config.matrix_co[row][col];
+        
+        if (led != -1) {
+            active_splash_led = led;
+            splash_timer = timer_read();
+        }
+    }
     switch (keycode) {
 
         // Кавычки " с двойным кликом на рус слое
