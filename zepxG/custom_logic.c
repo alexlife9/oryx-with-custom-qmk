@@ -647,4 +647,17 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             if (!record->event.pressed) return true;
             return true;
     }
+
+    void keyboard_post_init_user(void) {
+    // 1. Принудительно включаем RGB систему
+    rgb_matrix_enable();
+
+    // 2. Устанавливаем режим "Solid Reactive Simple"
+    // Это тот самый эффект, который включен в config.h
+    rgb_matrix_mode(RGB_MATRIX_SOLID_REACTIVE);
+    
+    // 3. (Опционально) Устанавливаем базовый цвет (например, белый), 
+    // если эффект требует базового цвета.
+    rgb_matrix_sethsv(HSV_WHITE);
+}
 }
