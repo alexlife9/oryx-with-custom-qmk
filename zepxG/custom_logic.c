@@ -78,8 +78,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 
-
-
         // Кавычки " с двойным кликом на рус слое
         case RU_DQUO:
             if (get_highest_layer(layer_state) != 0) {
@@ -570,8 +568,6 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return true;
 
-
-
         // печатаем 'ó-ó' в зависимости от слоя из которого пришли 
         case ST_MACRO_19: // слой [3] (правая часть): строка 3, столбец 3
         if (record->event.pressed) {
@@ -602,8 +598,6 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
         }
         return true;
-
-
 
         // печатаем 'да' на 4-м слое 
         case ST_MACRO_22: // слой [4]: строка 5, столбец 3
@@ -646,18 +640,18 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             // Если это отпускание — пропускаем
             if (!record->event.pressed) return true;
             return true;
+
+        void keyboard_post_init_user(void) {
+            // 1. Принудительно включаем RGB систему
+            rgb_matrix_enable();
+
+            // 2. Устанавливаем режим "Solid Reactive Simple"
+            // Это тот самый эффект, который включен в config.h
+            rgb_matrix_mode(RGB_MATRIX_SOLID_REACTIVE);
+            
+            // 3. (Опционально) Устанавливаем базовый цвет (например, белый), 
+            // если эффект требует базового цвета.
+            rgb_matrix_sethsv(HSV_WHITE);
+        }
     }
-
-    void keyboard_post_init_user(void) {
-    // 1. Принудительно включаем RGB систему
-    rgb_matrix_enable();
-
-    // 2. Устанавливаем режим "Solid Reactive Simple"
-    // Это тот самый эффект, который включен в config.h
-    rgb_matrix_mode(RGB_MATRIX_SOLID_REACTIVE);
-    
-    // 3. (Опционально) Устанавливаем базовый цвет (например, белый), 
-    // если эффект требует базового цвета.
-    rgb_matrix_sethsv(HSV_WHITE);
-}
 }
