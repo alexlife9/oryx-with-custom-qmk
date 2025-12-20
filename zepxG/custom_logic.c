@@ -24,8 +24,8 @@ void user_render_splash_effect(void) {
     if (active_splash_led == -1) return;
 
     // Параметры эффекта
-    uint16_t duration = 300;     // Длительность (мс)
-    uint8_t radius = 25;         // Радиус "пятна" (чем больше, тем больше соседей зацепит)
+    uint16_t duration = 350;     // Длительность (мс)
+    uint8_t radius = 30;         // Радиус "пятна" (чем больше, тем больше соседей зацепит)
 
     uint16_t elapsed = timer_elapsed(splash_timer);
 
