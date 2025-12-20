@@ -46,8 +46,8 @@ void user_render_splash_effect(void) {
     if (active_splash_led == -1) return;
 
     // Параметры эффекта
-    uint16_t duration = 350;     // Длительность (мс)
-    uint8_t radius = 35;         // Радиус "пятна" (чем больше, тем больше соседей зацепит)
+    uint16_t duration = 300;     // Длительность (мс)
+    uint8_t radius = 25;         // Радиус "пятна" (10 - одна клавиша, 40 - пятно будет больше)
 
     uint16_t elapsed = timer_elapsed(splash_timer);
 
@@ -56,7 +56,7 @@ void user_render_splash_effect(void) {
         uint8_t brightness = 255 - (255 * elapsed / duration);
 
         // Если уже почти погасло - выключаем, чтобы не считать лишнее
-        if (brightness < 5) {
+        if (brightness < 20) {
             active_splash_led = -1;
             return;
         }
@@ -153,7 +153,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
-    // ЛОВИМ КООРДИНАТЫ ДЛЯ ЭФФЕКТА
+    // 1. ЛОВИМ КООРДИНАТЫ ДЛЯ ЭФФЕКТА
     if (record->event.pressed) {
         uint8_t row = record->event.key.row;
         uint8_t col = record->event.key.col;
@@ -161,28 +161,12 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         
         if (led != -1) {
             active_splash_led = led;
-            // Запоминаем координаты центра вспышки
             center_x = g_led_config.point[led].x;
             center_y = g_led_config.point[led].y;
             splash_timer = timer_read();
         }
     }
-    
-    // Объявляем, что эти переменные существуют где-то в другом месте (в keymap.c)
-    extern int8_t active_splash_led;
-    extern uint16_t splash_timer;
 
-    // Ловим нажатие для вспышки
-    if (record->event.pressed) {
-        uint8_t row = record->event.key.row;
-        uint8_t col = record->event.key.col;
-        int8_t led = g_led_config.matrix_co[row][col];
-        
-        if (led != -1) {
-            active_splash_led = led;
-            splash_timer = timer_read();
-        }
-    }
     switch (keycode) {
 
         // Кавычки " с двойным кликом на рус слое
@@ -455,7 +439,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;    
 
-        // Умная клавиша: Запятая при клике / Слой 2 при удержании
+        // Запятая с пробелом при клике / Слой 4 при удержании
             case ST_MACRO_4:
             if (record->event.pressed) {
                 // === НАЖАТИЕ ===
