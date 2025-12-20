@@ -47,8 +47,9 @@ void user_render_splash_effect(void) {
 
             // Простая математика расстояния (без корней, чтобы не тормозило)
             // abs() - это модуль числа
-            intdist_t dist_x = abs(x - center_x);
-            intdist_t dist_y = abs(y - center_y);
+            // Используем обычный int, он есть всегда
+int dist_x = abs(x - center_x);
+int dist_y = abs(y - center_y);
 
             // Если диод внутри радиуса
             if (dist_x + dist_y < radius) {

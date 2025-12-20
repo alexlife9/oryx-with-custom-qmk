@@ -6,6 +6,8 @@
 #define ZSA_SAFE_RANGE SAFE_RANGE
 #endif
 
+void user_render_splash_effect(void);
+
 enum custom_keycodes {
   RGB_SLD = ZSA_SAFE_RANGE,
   HSV_0_255_85,
