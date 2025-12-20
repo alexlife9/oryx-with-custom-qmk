@@ -5,9 +5,6 @@
 #ifndef ZSA_SAFE_RANGE
 #define ZSA_SAFE_RANGE SAFE_RANGE
 #endif
-// === Переменные для эффекта вспышки ===
-int8_t active_splash_led = -1;
-uint16_t splash_timer = 0;
 
 enum custom_keycodes {
   RGB_SLD = ZSA_SAFE_RANGE,
@@ -186,11 +183,9 @@ void set_layer_color(int layer) {
 }
 
 bool rgb_matrix_indicators_user(void) {
-  if (rawhid_state.rgb_control) {
-      return false;
-  }
+  if (rawhid_state.rgb_control) { return false; }
   
-  // 1. Сначала рисуем стандартные цвета Oryx (розовый и другие)
+  // 1. Сначала рисуем цвета Oryx
   if (!keyboard_config.disable_layer_led) { 
     switch (biton32(layer_state)) {
       case 0: set_layer_color(0); break;
@@ -200,24 +195,15 @@ bool rgb_matrix_indicators_user(void) {
       case 4: set_layer_color(4); break;
       case 5: set_layer_color(5); break;
       case 6: set_layer_color(6); break;
-     default:
+      default:
         if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
           rgb_matrix_set_color_all(0, 0, 0);
         }
     }
   }
 
-  // 2. А теперь РИСУЕМ ПОВЕРХ НИХ нашу белую вспышку
-  if (active_splash_led != -1) {
-      // Вспышка длится 250 мс
-      if (timer_elapsed(splash_timer) < 250) {
-          // Рисуем БЕЛЫЙ цвет (255, 255, 255)
-          rgb_matrix_set_color(active_splash_led, 255, 255, 255);
-      } else {
-          // Время вышло, отключаем вспышку
-          active_splash_led = -1;
-      }
-  }
+  // 2. Рисуем эффект "Широкой капли" поверх
+  user_render_splash_effect();
 
   return true;
 }

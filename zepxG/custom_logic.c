@@ -12,6 +12,56 @@
 #include "quantum.h" // Для get_highest_layer, layer_state_t
 #include "timer.h"   // Для timer_read и timer_elapsed
 
+// === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
+static int8_t active_splash_led = -1; // Номер нажатого диода
+static uint16_t splash_timer = 0;     // Таймер
+static uint8_t center_x = 0;          // Координата X нажатия
+static uint8_t center_y = 0;          // Координата Y нажатия
+
+// === ЭФФЕКТ КАПЛИ С СОСЕДЯМИ (REACTIVE WIDE) ===
+void user_render_splash_effect(void) {
+    // Если эффекта нет - выходим сразу, чтобы не грузить проц
+    if (active_splash_led == -1) return;
+
+    // Параметры эффекта
+    uint16_t duration = 300;     // Длительность (мс)
+    uint8_t radius = 25;         // Радиус "пятна" (чем больше, тем больше соседей зацепит)
+
+    uint16_t elapsed = timer_elapsed(splash_timer);
+
+    if (elapsed < duration) {
+        // Вычисляем текущую яркость (от 255 до 0)
+        uint8_t brightness = 255 - (255 * elapsed / duration);
+
+        // Если уже почти погасло - выключаем, чтобы не считать лишнее
+        if (brightness < 20) {
+            active_splash_led = -1;
+            return;
+        }
+
+        // ПРОБЕГАЕМ ПО ВСЕМ СВЕТОДИОДАМ
+        for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+            // Берем координаты текущего проверяемого диода
+            uint8_t x = g_led_config.point[i].x;
+            uint8_t y = g_led_config.point[i].y;
+
+            // Простая математика расстояния (без корней, чтобы не тормозило)
+            // abs() - это модуль числа
+            intdist_t dist_x = abs(x - center_x);
+            intdist_t dist_y = abs(y - center_y);
+
+            // Если диод внутри радиуса
+            if (dist_x + dist_y < radius) {
+                // Рисуем его белым с текущей яркостью
+                rgb_matrix_set_color(i, brightness, brightness, brightness);
+            }
+        }
+    } else {
+        // Время вышло
+        active_splash_led = -1;
+    }
+}
+
 static bool is_russian_lang_active = true;
 
 #define CUSTOM_TAPPING_TERM 180 // Настраиваемый тайм-аут
@@ -77,6 +127,21 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Она перехватывает нажатия кнопок до того, как их обработает стандартная логика Oryx.
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
+
+    // ЛОВИМ КООРДИНАТЫ ДЛЯ ЭФФЕКТА
+    if (record->event.pressed) {
+        uint8_t row = record->event.key.row;
+        uint8_t col = record->event.key.col;
+        int8_t led = g_led_config.matrix_co[row][col];
+        
+        if (led != -1) {
+            active_splash_led = led;
+            // Запоминаем координаты центра вспышки
+            center_x = g_led_config.point[led].x;
+            center_y = g_led_config.point[led].y;
+            splash_timer = timer_read();
+        }
+    }
     
     // Объявляем, что эти переменные существуют где-то в другом месте (в keymap.c)
     extern int8_t active_splash_led;
