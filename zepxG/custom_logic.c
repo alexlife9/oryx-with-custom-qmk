@@ -7,14 +7,7 @@ void user_render_splash_effect(void);
 
 */
 
-/* ==2== найти строку bool process_record_user и добавить:
-#include "custom_logic.c"                                            // перед строкой
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
-    if (!process_record_custom(keycode, record)) { return false; }   // после строки
-
-*/
-
-/* ==3== найти rgb_matrix_indicators_user и внизу после 'default:' добавить это:
+/* ==2== найти (строка 200) rgb_matrix_indicators_user и внизу после 'default:' добавить это:
       default:
         if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
           rgb_matrix_set_color_all(0, 0, 0);
@@ -26,6 +19,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это �
   user_render_splash_effect();
 
   return true;
+
+*/
+
+/* ==3== найти (строка 320) bool process_record_user и добавить:
+#include "custom_logic.c"                                            // перед строкой
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
+    if (!process_record_custom(keycode, record)) { return false; }   // после строки
 
 */
 
