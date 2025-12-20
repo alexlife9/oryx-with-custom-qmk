@@ -1,11 +1,33 @@
 // ========================================================================
 
-// 1. найди функцию bool process_record_user(...) 
-// 2. вставь так: 
+// в файле keymap.c сделать изменения:
 
-//#include "custom_logic.c"                                            // это первое добавление
-//bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
-//    if (!process_record_custom(keycode, record)) { return false; }   // это второе добавление
+/* ==1== добавить в начало файла
+void user_render_splash_effect(void);
+
+*/
+
+/* ==2== найти строку bool process_record_user и добавить:
+#include "custom_logic.c"                                            // перед строкой
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
+    if (!process_record_custom(keycode, record)) { return false; }   // после строки
+
+*/
+
+/* ==3== найти rgb_matrix_indicators_user и внизу после 'default:' добавить это:
+      default:
+        if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
+          rgb_matrix_set_color_all(0, 0, 0);
+        }
+    }
+  }
+
+  // рисуем эффект "Широкой капли" поверх
+  user_render_splash_effect();
+
+  return true;
+
+*/
 
 // ========================================================================
 
@@ -25,7 +47,7 @@ void user_render_splash_effect(void) {
 
     // Параметры эффекта
     uint16_t duration = 350;     // Длительность (мс)
-    uint8_t radius = 30;         // Радиус "пятна" (чем больше, тем больше соседей зацепит)
+    uint8_t radius = 35;         // Радиус "пятна" (чем больше, тем больше соседей зацепит)
 
     uint16_t elapsed = timer_elapsed(splash_timer);
 
@@ -34,7 +56,7 @@ void user_render_splash_effect(void) {
         uint8_t brightness = 255 - (255 * elapsed / duration);
 
         // Если уже почти погасло - выключаем, чтобы не считать лишнее
-        if (brightness < 20) {
+        if (brightness < 5) {
             active_splash_led = -1;
             return;
         }
@@ -48,8 +70,8 @@ void user_render_splash_effect(void) {
             // Простая математика расстояния (без корней, чтобы не тормозило)
             // abs() - это модуль числа
             // Используем обычный int, он есть всегда
-int dist_x = abs(x - center_x);
-int dist_y = abs(y - center_y);
+            int dist_x = abs(x - center_x);
+            int dist_y = abs(y - center_y);
 
             // Если диод внутри радиуса
             if (dist_x + dist_y < radius) {
@@ -221,7 +243,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем (
-                    SEND_STRING("()"SS_TAP(X_LEFT)); // 2. Печатаем () и ставим курсор внутрь
+                    SEND_STRING("()"SS_TAP(X_LEFT));  // 2. Печатаем () и ставим курсор внутрь
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     lprn_timer = 0;
@@ -247,7 +269,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем {
-                    SEND_STRING("{}"SS_TAP(X_LEFT)); // 2. Печатаем {} и ставим курсор внутрь
+                    SEND_STRING("{}"SS_TAP(X_LEFT));  // 2. Печатаем {} и ставим курсор внутрь
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     lcbr_timer = 0;
@@ -273,7 +295,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем [
-                    SEND_STRING("[]"SS_TAP(X_LEFT)); // 2. Печатаем [] и ставим курсор внутрь
+                    SEND_STRING("[]"SS_TAP(X_LEFT));  // 2. Печатаем [] и ставим курсор внутрь
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
                     lbrc_timer = 0;
@@ -391,7 +413,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 if (timer_elapsed(ctlkca_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие:
-                    tap_code(KC_BSPC); // стираем '#'
+                    tap_code(KC_BSPC);  // стираем '#'
                     tap_code16(RU_NUM); // и печатаем '№'
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
@@ -415,7 +437,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 if (timer_elapsed(ctlkca_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие:
-                    tap_code(KC_BSPC); // стираем '$'
+                    tap_code(KC_BSPC);  // стираем '$'
                     tap_code16(RU_RUBL); // и печатаем '₽'
 
                     // Сбрасываем таймер, чтобы последовательность не продолжилась.
