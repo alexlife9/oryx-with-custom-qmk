@@ -56,7 +56,7 @@ void user_render_splash_effect(void) {
         uint8_t brightness = 255 - (255 * elapsed / duration);
 
         // Если уже почти погасло - выключаем, чтобы не считать лишнее
-        if (brightness < 20) {
+        if (brightness < 1) {
             active_splash_led = -1;
             return;
         }
