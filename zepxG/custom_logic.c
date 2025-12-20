@@ -456,42 +456,35 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             return false;    
 
         // Умная клавиша: Запятая при клике / Слой 2 при удержании
-        case ST_MACRO_4:
+            case ST_MACRO_4:
             if (record->event.pressed) {
                 // === НАЖАТИЕ ===
-                // 1. Засекаем время
                 macro4_timer = timer_read();
-                
-                // 2. Сразу включаем слой со стрелками (Слой 2)
-                layer_on(4); 
+                layer_on(4); // Включаем слой 4
             } 
             else {
                 // === ОТПУСКАНИЕ ===
-                // 1. Сразу выключаем слой со стрелками
-                layer_off(4);
+                layer_off(4); // Выключаем слой 4
 
-                // 2. Проверяем, был ли это быстрый клик (меньше 180мс)
-            uint8_t current_layer = get_highest_layer(layer_state);
+                // Проверяем, был ли это короткий клик (меньше 180мс)
+                if (timer_elapsed(macro4_timer) < CUSTOM_TAPPING_TERM) {
+                    
+                    // Узнаем текущий слой (так как 4-й мы уже выключили, будет 0 или 1)
+                    uint8_t current_layer = get_highest_layer(layer_state);
 
-            // Условие 1: Мы сейчас на русском слое (слой 0)
-            if (current_layer == 0) {
-                
-                // печатаем русскую запятую и ставим пробел
-                tap_code16(RU_COMM);
-                tap_code16(KC_SPACE);
-            } 
-
-            // Условие 2: Мы сейчас на английском слое (слой 1)
-            else if (current_layer == 1) {
-                
-                // печатаем английскую запятую и ставим пробел
-                tap_code16(KC_COMMA);
-                tap_code16(KC_SPACE);
+                    if (current_layer == 0) {
+                        // Русский: , + пробел
+                        tap_code16(RU_COMM);
+                        tap_code16(KC_SPACE);
+                    } 
+                    else {
+                        // Английский: , + пробел
+                        tap_code16(KC_COMMA);
+                        tap_code16(KC_SPACE);
+                    }
+                }
             }
-            
-            return false; 
-        }
-        return true;
+            return false;
 
         // печатаем 'ú-у́' в зависимости от слоя из которого пришли 
         case ST_MACRO_11: // слой [3]: строка 2, столбец 4
