@@ -435,6 +435,42 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;    
+
+        // Запятая с пробелом при клике / Слой 4 при удержании
+        case DUAL_FUNC_0:
+            // Если QMK определил, что это был КЛИК (Tap)
+            if (record->tap.count > 0) {
+                
+                if (record->event.pressed) {
+                    // 1. Проверяем язык
+                    // (Используем last_base_layer, если он объявлен, или get_highest_layer)
+                    uint8_t current_layer = get_highest_layer(layer_state);
+
+                    if (current_layer == 0) {
+                        tap_code16(RU_COMM); // Русская ,
+                    } else {
+                        tap_code16(KC_COMMA); // Английская ,
+                    }
+                    
+                    // 2. Печатаем пробел
+                    tap_code16(KC_SPACE);
+                }
+                // На отпускание (else) ничего делать не надо, tap_code уже всё сделал
+            } 
+            
+            // Если QMK определил, что это УДЕРЖАНИЕ (Hold)
+            else {
+                if (record->event.pressed) {
+                    layer_on(4); // Включаем слой
+                } else {
+                    layer_off(4); // Выключаем слой
+                }
+            }
+            
+            // Самое важное: блокируем родной код Oryx
+            return false;
+
+  
 /*
         // Запятая с пробелом при клике / Слой 4 при удержании
             case ST_MACRO_4:
