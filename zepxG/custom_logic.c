@@ -436,75 +436,19 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;    
 
-        // Запятая с пробелом при клике / Слой 4 при удержании
-        case DUAL_FUNC_0:
-            // Если QMK определил, что это был КЛИК (Tap)
-            if (record->tap.count > 0) {
-                
+        // Запятая с пробелом при клике 
+        case RU_COMM:          
                 if (record->event.pressed) {
-                    // 1. Проверяем язык
-                    // (Используем last_base_layer, если он объявлен, или get_highest_layer)
                     uint8_t current_layer = get_highest_layer(layer_state);
 
                     if (current_layer == 0) {
                         tap_code16(RU_COMM); // Русская ,
-                    } else {
-                        tap_code16(KC_COMMA); // Английская ,
-                    }
-                    
-                    // 2. Печатаем пробел
-                    tap_code16(KC_SPACE);
-                }
-                // На отпускание (else) ничего делать не надо, tap_code уже всё сделал
+                        tap_code16(KC_SPACE);
+                    }                                       
+                
             } 
-            
-            // Если QMK определил, что это УДЕРЖАНИЕ (Hold)
-            else {
-                if (record->event.pressed) {
-                    layer_on(4); // Включаем слой
-                } else {
-                    layer_off(4); // Выключаем слой
-                }
-            }
-            
             // Самое важное: блокируем родной код Oryx
             return false;
-
-  
-/*
-        // Запятая с пробелом при клике / Слой 4 при удержании
-            case ST_MACRO_4:
-            
-            if (record->event.pressed) {
-                // === НАЖАТИЕ ===
-                macro4_timer = timer_read();
-                layer_on(4); // Включаем слой 4
-            } 
-            else {
-                // === ОТПУСКАНИЕ ===
-                layer_off(4); // Выключаем слой 4
-
-                // Проверяем, был ли это короткий клик (меньше 180мс)
-                if (timer_elapsed(macro4_timer) < CUSTOM_TAPPING_TERM) {
-                    
-                    // Узнаем текущий слой (так как 4-й мы уже выключили, будет 0 или 1)
-                    uint8_t current_layer = get_highest_layer(layer_state);
-
-                    if (current_layer == 0) {
-                        // Русский: , + пробел
-                        tap_code16(RU_COMM);
-                        tap_code16(KC_SPACE);
-                    } 
-                    else {
-                        // Английский: , + пробел
-                        tap_code16(KC_COMMA);
-                        tap_code16(KC_SPACE);
-                    }
-                }
-            }
-            
-            return false;
-*/
 
         // печатаем 'ú-у́' в зависимости от слоя из которого пришли 
         case ST_MACRO_10: // слой [3]: строка 2, столбец 4
