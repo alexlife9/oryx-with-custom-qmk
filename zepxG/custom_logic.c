@@ -438,17 +438,22 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
         // Запятая с пробелом при клике 
         case RU_COMM:          
-                if (record->event.pressed) {
-                    uint8_t current_layer = get_highest_layer(layer_state);
+            if (record->event.pressed) {
+                uint8_t current_layer = get_highest_layer(layer_state);
 
-                    if (current_layer == 0) {
-                        tap_code16(RU_COMM); // Русская ,
-                        tap_code16(KC_SPACE);
-                    }                                       
+                // Если мы на Русском слое (0)
+                if (current_layer == 0) {
+                    tap_code16(RU_COMM); // Печатаем запятую
+                    tap_code16(KC_SPACE); // Печатаем пробел
+                    return false; // Блокируем стандартное нажатие, т.к. мы уже все сделали
+                }
                 
-            } 
-            // Самое важное: блокируем родной код Oryx
-            return false;
+                // Если мы на Английском слое (1) или любом другом
+                // Мы ничего не делаем и выходим из if, попадая в return true ниже
+            }
+            // Возвращаем true, чтобы QMK обработал этот код стандартно
+            // (это напечатает '?' на английском слое)
+            return true;
 
         // печатаем 'ú-у́' в зависимости от слоя из которого пришли 
         case ST_MACRO_10: // слой [3]: строка 2, столбец 4
