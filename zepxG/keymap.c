@@ -5,7 +5,9 @@
 #ifndef ZSA_SAFE_RANGE
 #define ZSA_SAFE_RANGE SAFE_RANGE
 #endif
+
 void user_render_splash_effect(void);
+
 
 enum custom_keycodes {
   RGB_SLD = ZSA_SAFE_RANGE,
@@ -42,7 +44,7 @@ enum tap_dance_codes {
   DANCE_1,
 };
 
-#define DUAL_FUNC_0 LT(2, KC_F10)
+#define DUAL_FUNC_0 LT(1, KC_F20)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_moonlander(
@@ -104,12 +106,13 @@ const uint16_t PROGMEM combo4[] = { LCTL(KC_A), RU_YA, COMBO_END};
 const uint16_t PROGMEM combo5[] = { RU_ER, RU_RPRN, COMBO_END};
 const uint16_t PROGMEM combo6[] = { KC_KP_PLUS, KC_KP_MINUS, COMBO_END};
 const uint16_t PROGMEM combo7[] = { MT(MOD_LCTL, KC_DELETE), KC_SPACE, COMBO_END};
-const uint16_t PROGMEM combo8[] = { RU_PE, RU_I, COMBO_END};
-const uint16_t PROGMEM combo9[] = { RU_SCLN, RU_LPRN, COMBO_END};
-const uint16_t PROGMEM combo10[] = { RU_EF, MT(MOD_LCTL, KC_DELETE), COMBO_END};
-const uint16_t PROGMEM combo11[] = { MT(MOD_LCTL, KC_DELETE), KC_TAB, COMBO_END};
-const uint16_t PROGMEM combo12[] = { KC_LEFT, KC_RIGHT, COMBO_END};
-const uint16_t PROGMEM combo13[] = { KC_KP_5, KC_KP_6, COMBO_END};
+const uint16_t PROGMEM combo8[] = { RU_SCLN, RU_LPRN, COMBO_END};
+const uint16_t PROGMEM combo9[] = { RU_EF, MT(MOD_LCTL, KC_DELETE), COMBO_END};
+const uint16_t PROGMEM combo10[] = { MT(MOD_LCTL, KC_DELETE), KC_TAB, COMBO_END};
+const uint16_t PROGMEM combo11[] = { KC_LEFT, KC_RIGHT, COMBO_END};
+const uint16_t PROGMEM combo12[] = { KC_KP_5, KC_KP_6, COMBO_END};
+const uint16_t PROGMEM combo13[] = { RU_VE, RU_A, COMBO_END};
+const uint16_t PROGMEM combo14[] = { KC_KP_ASTERISK, KC_KP_SLASH, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo0, LCTL(KC_ENTER)),
@@ -120,12 +123,13 @@ combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo5, RU_RUBL),
     COMBO(combo6, KC_EQUAL),
     COMBO(combo7, KC_ENTER),
-    COMBO(combo8, KC_DELETE),
-    COMBO(combo9, KC_BSPC),
-    COMBO(combo10, TO(3)),
-    COMBO(combo11, KC_CAPS),
-    COMBO(combo12, KC_SPACE),
+    COMBO(combo8, KC_BSPC),
+    COMBO(combo9, TO(3)),
+    COMBO(combo10, KC_CAPS),
+    COMBO(combo11, KC_SPACE),
+    COMBO(combo12, KC_DELETE),
     COMBO(combo13, KC_DELETE),
+    COMBO(combo14, KC_ENTER),
 };
 
 
@@ -321,7 +325,6 @@ tap_dance_action_t tap_dance_actions[] = {
 #include "custom_logic.c"                                            // перед строкой
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
     if (!process_record_custom(keycode, record)) { return false; }   // после строки
-
   switch (keycode) {
     case ST_MACRO_0:
     if (record->event.pressed) {
