@@ -412,11 +412,11 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        // Замена $ на ₽ с двойным кликом
+        // Замена $ на ₽ с двойным кликом на русском слое
         case ST_MACRO_1:
             if (record->event.pressed) {
 
-                // Проверяем, было ли предыдущее нажатие LCTL(KC_A)
+                // Проверяем, было ли двойное нажатие
                 if (timer_elapsed(ctlkca_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие:
@@ -435,6 +435,30 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;    
+
+        // Замена $ на ₽ с двойным кликом на англ слое и цифровом
+        case KC_DLR:
+            if (record->event.pressed) {
+
+                // Проверяем, было ли двойное нажатие
+                if (timer_elapsed(ctlkca_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // "Исправляем" предыдущее действие:
+                    tap_code(KC_BSPC);  // стираем '$'
+                    tap_code16(RU_RUBL); // и печатаем '₽'
+
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    ctlkca_timer = 0;
+                } else {
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    tap_code16(KC_DLR); // печатаем '$'
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    ctlkca_timer = timer_read();
+                }
+            }
+            return false;  
 
         // Запятая с пробелом при клике 
         case RU_COMM:          
@@ -681,7 +705,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         return true;
 
         // печатаем 'да' на 4-м слое 
-        case ST_MACRO_21: // слой [4]: строка 5, столбец 3
+        case ST_MACRO_21: // слой [4]: строка 4, столбец 3
         if (record->event.pressed) {
             // Работаем только на 4-м слое
             if (get_highest_layer(layer_state) == 4) {
