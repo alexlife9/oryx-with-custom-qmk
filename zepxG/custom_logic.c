@@ -22,7 +22,7 @@ void user_render_splash_effect(void);
 
 */
 
-/* ==3== найти (строка 360) bool process_record_user и добавить:
+/* ==3== найти (строка 390) bool process_record_user и добавить:
 #include "custom_logic.c"                                            // перед строкой
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
     if (!process_record_custom(keycode, record)) { return false; }   // после строки
@@ -54,7 +54,7 @@ static uint8_t current_splash_idx = 0; // Какой слот перезапис
 // === ЭФФЕКТ КАПЛИ С СОСЕДЯМИ (REACTIVE WIDE) ===
 // === ЭФФЕКТ: МНОГОГОЛОСЫЙ БУМЕРАНГ ===
 void user_render_splash_effect(void) {
-    uint16_t duration = 800;  // Длительность
+    uint16_t duration = 900;  // Длительность
     uint8_t radius = 25;      // Радиус
     
     // Берем потолок яркости один раз
