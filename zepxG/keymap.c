@@ -5,7 +5,10 @@
 #ifndef ZSA_SAFE_RANGE
 #define ZSA_SAFE_RANGE SAFE_RANGE
 #endif
+<<<<<<< HEAD
 void user_render_splash_effect(void); 
+=======
+>>>>>>> 8fed6474655c634e9259d2aff9c9b8826849a0bd
 
 enum custom_keycodes {
   RGB_SLD = ZSA_SAFE_RANGE,
@@ -200,11 +203,16 @@ bool rgb_matrix_indicators_user(void) {
       case 5:
         set_layer_color(5);
         break;
+<<<<<<< HEAD
       default:
+=======
+     default:
+>>>>>>> 8fed6474655c634e9259d2aff9c9b8826849a0bd
         if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
           rgb_matrix_set_color_all(0, 0, 0);
         }
     }
+<<<<<<< HEAD
   }
 
   // рисуем эффект "Широкой капли" поверх
@@ -212,6 +220,15 @@ bool rgb_matrix_indicators_user(void) {
 
   return true;
 
+=======
+  } else {
+    if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
+      rgb_matrix_set_color_all(0, 0, 0);
+    }
+  }
+
+  return true;
+>>>>>>> 8fed6474655c634e9259d2aff9c9b8826849a0bd
 }
 
 
@@ -355,6 +372,7 @@ tap_dance_action_t tap_dance_actions[] = {
         [DANCE_2] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_2, dance_2_finished, dance_2_reset),
 };
 
+<<<<<<< HEAD
 #include "custom_logic.c"                                            // перед строкой
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
     if (!process_record_custom(keycode, record)) { return false; }   // после строки
@@ -362,6 +380,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это �
   switch (keycode) {
   case QK_MODS ... QK_MODS_MAX:
 
+=======
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+  case QK_MODS ... QK_MODS_MAX:
+    // Mouse and consumer keys (volume, media) with modifiers work inconsistently across operating systems,
+    // this makes sure that modifiers are always applied to the key that was pressed.
+>>>>>>> 8fed6474655c634e9259d2aff9c9b8826849a0bd
     if (IS_CONSUMER_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode))) {
       if (record->event.pressed) {
         add_mods(QK_MODS_GET_MODS(keycode));
