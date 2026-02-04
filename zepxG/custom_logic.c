@@ -40,42 +40,47 @@ static uint16_t splash_timer = 0;     // Таймер
 static uint8_t center_x = 0;          // Координата X нажатия
 static uint8_t center_y = 0;          // Координата Y нажатия
 
-// === ЭФФЕКТ КАПЛИ (REACTIVE WIDE) - ПЛАВНОЕ ЗАТУХАНИЕ ===
+// === ЭФФЕКТ КАПЛИ: АДДИТИВНОЕ СМЕШИВАНИЕ (БЕЗ СКАЧКОВ) ===
 void user_render_splash_effect(void) {
-    // Если эффекта нет - выходим
     if (active_splash_led == -1) return;
 
-    // Настройки
-    uint16_t duration = 400;     // Чуть увеличил время для мягкости (было 300)
-    uint8_t radius = 25;         // Радиус пятна
+    uint16_t duration = 400;     // Длительность
+    uint8_t radius = 25;         // Радиус
 
     uint16_t elapsed = timer_elapsed(splash_timer);
 
     if (elapsed < duration) {
-        // === ИСПРАВЛЕНИЕ: КВАДРАТИЧНОЕ ЗАТУХАНИЕ ===
-        // Вместо линейного падения делаем "кривую":
-        // (остаток времени)^2 / (все время)^2 * 255
-        // Это дает очень плавный выход в ноль без "ступеньки" в конце.
-        
+        // Квадратичное затухание для плавности
         uint32_t remaining = duration - elapsed;
-        // Используем 32-битную переменную для промежуточных вычислений, чтобы не было переполнения
         uint8_t brightness = (remaining * remaining * 255) / ((uint32_t)duration * duration);
 
-        // Рисуем
         for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+            // Оптимизация: не трогаем диоды за пределами радиуса
             uint8_t x = g_led_config.point[i].x;
             uint8_t y = g_led_config.point[i].y;
-
-            // Расчет дистанции
+            
+            // Быстрая проверка расстояния (Манхэттенское расстояние для скорости)
             int dist_x = abs(x - center_x);
             int dist_y = abs(y - center_y);
 
             if (dist_x + dist_y < radius) {
-                rgb_matrix_set_color(i, brightness, brightness, brightness);
+                // 1. Сначала читаем цвет, который УЖЕ есть на этом диоде (от базового эффекта)
+                uint8_t base_r = rgb_matrix.rgb[i].r;
+                uint8_t base_g = rgb_matrix.rgb[i].g;
+                uint8_t base_b = rgb_matrix.rgb[i].b;
+
+                // 2. Добавляем нашу яркость поверх (Additive Blending)
+                // Вместо того чтобы рисовать серый (brightness, brightness, brightness),
+                // мы прибавляем свет к базе. Получается "вспышка", которая угасает в родной цвет.
+                // qadd8 — это встроенная функция QMK: (a + b > 255) ? 255 : a + b
+                rgb_matrix_set_color(i, 
+                    qadd8(base_r, brightness), 
+                    qadd8(base_g, brightness), 
+                    qadd8(base_b, brightness)
+                );
             }
         }
     } else {
-        // Время вышло - отключаем эффект
         active_splash_led = -1;
     }
 }
