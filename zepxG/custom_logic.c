@@ -45,7 +45,7 @@ void user_render_splash_effect(void) {
     if (active_splash_led == -1) return;
 
     // === НАСТРОЙКИ ===
-    uint16_t duration = 600;     // Общее время анимации
+    uint16_t duration = 1000;     // Общее время анимации
     uint8_t radius = 25;         // Радиус
 
     // Получаем текущую настроенную яркость клавиатуры (0-255)
