@@ -40,47 +40,42 @@ static uint16_t splash_timer = 0;     // Таймер
 static uint8_t center_x = 0;          // Координата X нажатия
 static uint8_t center_y = 0;          // Координата Y нажатия
 
-// === ЭФФЕКТ КАПЛИ С СОСЕДЯМИ (REACTIVE WIDE) ===
+// === ЭФФЕКТ КАПЛИ (REACTIVE WIDE) - ПЛАВНОЕ ЗАТУХАНИЕ ===
 void user_render_splash_effect(void) {
-    // Если эффекта нет - выходим сразу, чтобы не грузить проц
+    // Если эффекта нет - выходим
     if (active_splash_led == -1) return;
 
-    // Параметры эффекта
-    uint16_t duration = 300;     // Длительность (мс)
-    uint8_t radius = 25;         // Радиус "пятна" (10 - одна клавиша, 40 - пятно будет больше)
+    // Настройки
+    uint16_t duration = 400;     // Чуть увеличил время для мягкости (было 300)
+    uint8_t radius = 25;         // Радиус пятна
 
     uint16_t elapsed = timer_elapsed(splash_timer);
 
     if (elapsed < duration) {
-        // Вычисляем текущую яркость (от 255 до 0)
-        uint8_t brightness = 255 - (255 * elapsed / duration);
+        // === ИСПРАВЛЕНИЕ: КВАДРАТИЧНОЕ ЗАТУХАНИЕ ===
+        // Вместо линейного падения делаем "кривую":
+        // (остаток времени)^2 / (все время)^2 * 255
+        // Это дает очень плавный выход в ноль без "ступеньки" в конце.
+        
+        uint32_t remaining = duration - elapsed;
+        // Используем 32-битную переменную для промежуточных вычислений, чтобы не было переполнения
+        uint8_t brightness = (remaining * remaining * 255) / ((uint32_t)duration * duration);
 
-        // Если уже почти погасло - выключаем, чтобы не считать лишнее
-        if (brightness < 1) {
-            active_splash_led = -1;
-            return;
-        }
-
-        // ПРОБЕГАЕМ ПО ВСЕМ СВЕТОДИОДАМ
+        // Рисуем
         for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
-            // Берем координаты текущего проверяемого диода
             uint8_t x = g_led_config.point[i].x;
             uint8_t y = g_led_config.point[i].y;
 
-            // Простая математика расстояния (без корней, чтобы не тормозило)
-            // abs() - это модуль числа
-            // Используем обычный int, он есть всегда
+            // Расчет дистанции
             int dist_x = abs(x - center_x);
             int dist_y = abs(y - center_y);
 
-            // Если диод внутри радиуса
             if (dist_x + dist_y < radius) {
-                // Рисуем его белым с текущей яркостью
                 rgb_matrix_set_color(i, brightness, brightness, brightness);
             }
         }
     } else {
-        // Время вышло
+        // Время вышло - отключаем эффект
         active_splash_led = -1;
     }
 }
