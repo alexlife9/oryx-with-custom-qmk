@@ -40,48 +40,54 @@ static uint16_t splash_timer = 0;     // Таймер
 static uint8_t center_x = 0;          // Координата X нажатия
 static uint8_t center_y = 0;          // Координата Y нажатия
 
-// === ЭФФЕКТ "БУМЕРАНГ": ГАСНЕТ В НОЛЬ, ПОТОМ РАЗГОРАЕТСЯ ОБРАТНО ===
+// === ЭФФЕКТ КАПЛИ С СОСЕДЯМИ (REACTIVE WIDE) ===
 void user_render_splash_effect(void) {
     // Если эффекта нет - выходим
     if (active_splash_led == -1) return;
 
-    // Общая длительность эффекта (увеличил, т.к. теперь два цикла)
-    uint16_t duration = 500; 
-    uint8_t radius = 25; 
+    // === НАСТРОЙКИ ===
+    uint16_t duration = 700;     // Общее время (вниз и вверх). Лучше поставить больше, чем было.
+    uint8_t radius = 25;         // Радиус пятна
+    // =================
 
     uint16_t elapsed = timer_elapsed(splash_timer);
+    uint16_t half_duration = duration / 2; // Середина пути (точка самой низкой яркости)
 
     if (elapsed < duration) {
-        uint8_t brightness;
-        uint16_t half_duration = duration / 2;
+        uint8_t brightness = 0;
 
-        // === РАСЧЕТ ЯРКОСТИ (V-образная кривая) ===
         if (elapsed < half_duration) {
-            // ПЕРВАЯ ПОЛОВИНА: Затухаем от 255 до 0
-            // Приводим к uint32_t перед умножением, чтобы не было переполнения
-            brightness = ((uint32_t)255 * (half_duration - elapsed)) / half_duration;
+            // ФАЗА 1: ЗАТУХАНИЕ (от 255 до 0)
+            // Формула: чем больше времени прошло, тем меньше яркость
+            brightness = 255 - (255 * elapsed / half_duration);
         } else {
-            // ВТОРАЯ ПОЛОВИНА: Разгораемся от 0 до 255
-            uint16_t elapsed_part2 = elapsed - half_duration;
-            brightness = ((uint32_t)255 * elapsed_part2) / half_duration;
+            // ФАЗА 2: РАЗГОРАНИЕ (от 0 до 255)
+            // Считаем время, прошедшее с момента середины
+            uint16_t time_in_phase2 = elapsed - half_duration;
+            brightness = 255 * time_in_phase2 / half_duration;
         }
 
-        // === ОТРИСОВКА ===
+        // Если яркость получилась 0 (или около того) - можно не рисовать,
+        // но лучше оставить как есть для плавности перехода.
+
+        // ПРОБЕГАЕМ ПО ВСЕМ СВЕТОДИОДАМ
         for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
             uint8_t x = g_led_config.point[i].x;
             uint8_t y = g_led_config.point[i].y;
 
-            // Расчет дистанции
+            // Используем abs() для расчета расстояния (Манхэттенское расстояние для скорости)
             int dist_x = abs(x - center_x);
             int dist_y = abs(y - center_y);
 
+            // Если диод внутри радиуса
             if (dist_x + dist_y < radius) {
-                // Рисуем белым с текущей яркостью маятника
+                // Рисуем цветом с вычисленной яркостью
+                // Можно сделать цвет не белым, а например, золотым (255, 200, 0)
                 rgb_matrix_set_color(i, brightness, brightness, brightness);
             }
         }
     } else {
-        // Время вышло - выключаем эффект
+        // Время вышло - отключаем эффект
         active_splash_led = -1;
     }
 }
