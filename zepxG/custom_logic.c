@@ -42,52 +42,45 @@ static uint8_t center_y = 0;          // Координата Y нажатия
 
 // === ЭФФЕКТ КАПЛИ С СОСЕДЯМИ (REACTIVE WIDE) ===
 void user_render_splash_effect(void) {
-    // Если эффекта нет - выходим
     if (active_splash_led == -1) return;
 
     // === НАСТРОЙКИ ===
-    uint16_t duration = 700;     // Общее время (вниз и вверх). Лучше поставить больше, чем было.
-    uint8_t radius = 25;         // Радиус пятна
+    uint16_t duration = 600;     // Общее время анимации
+    uint8_t radius = 25;         // Радиус
+
+    // Получаем текущую настроенную яркость клавиатуры (0-255)
+    // Это и будет наш "потолок"
+    uint8_t max_val = rgb_matrix_get_val(); 
     // =================
 
     uint16_t elapsed = timer_elapsed(splash_timer);
-    uint16_t half_duration = duration / 2; // Середина пути (точка самой низкой яркости)
+    uint16_t half_duration = duration / 2;
 
     if (elapsed < duration) {
         uint8_t brightness = 0;
 
+        // Используем uint32_t для расчетов, чтобы избежать переполнения при умножении
         if (elapsed < half_duration) {
-            // ФАЗА 1: ЗАТУХАНИЕ (от 255 до 0)
-            // Формула: чем больше времени прошло, тем меньше яркость
-            brightness = 255 - (255 * elapsed / half_duration);
+            // ФАЗА 1: Затухаем от max_val до 0
+            brightness = max_val - ((uint32_t)max_val * elapsed / half_duration);
         } else {
-            // ФАЗА 2: РАЗГОРАНИЕ (от 0 до 255)
-            // Считаем время, прошедшее с момента середины
+            // ФАЗА 2: Разгораемся от 0 до max_val
             uint16_t time_in_phase2 = elapsed - half_duration;
-            brightness = 255 * time_in_phase2 / half_duration;
+            brightness = (uint32_t)max_val * time_in_phase2 / half_duration;
         }
 
-        // Если яркость получилась 0 (или около того) - можно не рисовать,
-        // но лучше оставить как есть для плавности перехода.
-
-        // ПРОБЕГАЕМ ПО ВСЕМ СВЕТОДИОДАМ
         for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
             uint8_t x = g_led_config.point[i].x;
             uint8_t y = g_led_config.point[i].y;
-
-            // Используем abs() для расчета расстояния (Манхэттенское расстояние для скорости)
             int dist_x = abs(x - center_x);
             int dist_y = abs(y - center_y);
 
-            // Если диод внутри радиуса
             if (dist_x + dist_y < radius) {
-                // Рисуем цветом с вычисленной яркостью
-                // Можно сделать цвет не белым, а например, золотым (255, 200, 0)
+                // Рисуем белым, но с яркостью не выше системной
                 rgb_matrix_set_color(i, brightness, brightness, brightness);
             }
         }
     } else {
-        // Время вышло - отключаем эффект
         active_splash_led = -1;
     }
 }
