@@ -5,6 +5,7 @@
 #ifndef ZSA_SAFE_RANGE
 #define ZSA_SAFE_RANGE SAFE_RANGE
 #endif
+void user_render_splash_effect(void);
 
 enum custom_keycodes {
   RGB_SLD = ZSA_SAFE_RANGE,
@@ -199,18 +200,18 @@ bool rgb_matrix_indicators_user(void) {
       case 5:
         set_layer_color(5);
         break;
-     default:
+      default:
         if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
           rgb_matrix_set_color_all(0, 0, 0);
         }
     }
-  } else {
-    if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
-      rgb_matrix_set_color_all(0, 0, 0);
-    }
   }
 
+  // рисуем эффект "Широкой капли" поверх
+  user_render_splash_effect();
+
   return true;
+
 }
 
 
@@ -354,7 +355,10 @@ tap_dance_action_t tap_dance_actions[] = {
         [DANCE_2] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_2, dance_2_finished, dance_2_reset),
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+#include "custom_logic.c"                                            // перед строкой
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
+    if (!process_record_custom(keycode, record)) { return false; }   // после строки
+
   switch (keycode) {
   case QK_MODS ... QK_MODS_MAX:
     // Mouse and consumer keys (volume, media) with modifiers work inconsistently across operating systems,

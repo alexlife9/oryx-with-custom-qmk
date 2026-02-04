@@ -22,7 +22,7 @@ void user_render_splash_effect(void);
 
 */
 
-/* ==3== найти (строка 320) bool process_record_user и добавить:
+/* ==3== найти (строка 360) bool process_record_user и добавить:
 #include "custom_logic.c"                                            // перед строкой
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
     if (!process_record_custom(keycode, record)) { return false; }   // после строки
