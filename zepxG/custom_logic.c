@@ -34,54 +34,69 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это �
 #include "quantum.h" // Для get_highest_layer, layer_state_t
 #include "timer.h"   // Для timer_read и timer_elapsed
 
-// === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
-static int8_t active_splash_led = -1; // Номер нажатого диода
-static uint16_t splash_timer = 0;     // Таймер
-static uint8_t center_x = 0;          // Координата X нажатия
-static uint8_t center_y = 0;          // Координата Y нажатия
+// === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ (ПОЛИФОНИЯ) ===
+#define MAX_SPLASHES 5 // Сколько эффектов может гореть одновременно
+
+typedef struct {
+    int8_t led;      // Номер диода (-1, если слот свободен)
+    uint16_t timer;  // Время старта
+    uint8_t x;       // Координата X
+    uint8_t y;       // Координата Y
+} splash_event_t;
+
+// Создаем массив на 5 эффектов
+static splash_event_t splashes[MAX_SPLASHES] = {
+    {-1,0,0,0}, {-1,0,0,0}, {-1,0,0,0}, {-1,0,0,0}, {-1,0,0,0}
+};
+
+static uint8_t current_splash_idx = 0; // Какой слот перезаписывать следующим
 
 // === ЭФФЕКТ КАПЛИ С СОСЕДЯМИ (REACTIVE WIDE) ===
+// === ЭФФЕКТ: МНОГОГОЛОСЫЙ БУМЕРАНГ ===
 void user_render_splash_effect(void) {
-    if (active_splash_led == -1) return;
+    uint16_t duration = 800;  // Длительность
+    uint8_t radius = 25;      // Радиус
+    
+    // Берем потолок яркости один раз
+    uint8_t max_val = rgb_matrix_get_val();
 
-    // === НАСТРОЙКИ ===
-    uint16_t duration = 1000;     // Общее время анимации
-    uint8_t radius = 25;         // Радиус
+    // ПРОБЕГАЕМ ПО ВСЕМ СЛОТАМ ЭФФЕКТОВ
+    for (int s = 0; s < MAX_SPLASHES; s++) {
+        // Если слот пустой - пропускаем
+        if (splashes[s].led == -1) continue;
 
-    // Получаем текущую настроенную яркость клавиатуры (0-255)
-    // Это и будет наш "потолок"
-    uint8_t max_val = rgb_matrix_get_val(); 
-    // =================
+        uint16_t elapsed = timer_elapsed(splashes[s].timer);
 
-    uint16_t elapsed = timer_elapsed(splash_timer);
-    uint16_t half_duration = duration / 2;
-
-    if (elapsed < duration) {
-        uint8_t brightness = 0;
-
-        // Используем uint32_t для расчетов, чтобы избежать переполнения при умножении
-        if (elapsed < half_duration) {
-            // ФАЗА 1: Затухаем от max_val до 0
-            brightness = max_val - ((uint32_t)max_val * elapsed / half_duration);
-        } else {
-            // ФАЗА 2: Разгораемся от 0 до max_val
-            uint16_t time_in_phase2 = elapsed - half_duration;
-            brightness = (uint32_t)max_val * time_in_phase2 / half_duration;
+        // Если время эффекта вышло - освобождаем слот
+        if (elapsed >= duration) {
+            splashes[s].led = -1;
+            continue;
         }
 
+        // Расчет яркости (Бумеранг) для конкретного этого всплеска
+        uint8_t brightness;
+        uint16_t half_duration = duration / 2;
+
+        if (elapsed < half_duration) {
+            brightness = ((uint32_t)max_val * (half_duration - elapsed)) / half_duration;
+        } else {
+            uint16_t elapsed_part2 = elapsed - half_duration;
+            brightness = ((uint32_t)max_val * elapsed_part2) / half_duration;
+        }
+
+        // Отрисовка этого конкретного всплеска
         for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
             uint8_t x = g_led_config.point[i].x;
             uint8_t y = g_led_config.point[i].y;
-            int dist_x = abs(x - center_x);
-            int dist_y = abs(y - center_y);
+
+            // Считаем расстояние до центра ИМЕННО ЭТОГО (s) всплеска
+            int dist_x = abs(x - splashes[s].x);
+            int dist_y = abs(y - splashes[s].y);
 
             if (dist_x + dist_y < radius) {
-                // Рисуем белым, но с яркостью не выше системной
                 rgb_matrix_set_color(i, brightness, brightness, brightness);
             }
         }
-    } else {
-        active_splash_led = -1;
     }
 }
 
@@ -150,17 +165,21 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
-    // 1. ЛОВИМ КООРДИНАТЫ ДЛЯ ЭФФЕКТА
+// 1. ЛОВИМ КООРДИНАТЫ ДЛЯ ЭФФЕКТА (ПОЛИФОНИЯ)
     if (record->event.pressed) {
         uint8_t row = record->event.key.row;
         uint8_t col = record->event.key.col;
         int8_t led = g_led_config.matrix_co[row][col];
         
         if (led != -1) {
-            active_splash_led = led;
-            center_x = g_led_config.point[led].x;
-            center_y = g_led_config.point[led].y;
-            splash_timer = timer_read();
+            // Пишем данные в текущий свободный слот массива
+            splashes[current_splash_idx].led = led;
+            splashes[current_splash_idx].x = g_led_config.point[led].x;
+            splashes[current_splash_idx].y = g_led_config.point[led].y;
+            splashes[current_splash_idx].timer = timer_read();
+
+            // Сдвигаем индекс на следующий слот (0 -> 1 -> 2 ... -> 0)
+            current_splash_idx = (current_splash_idx + 1) % MAX_SPLASHES;
         }
     }
 
