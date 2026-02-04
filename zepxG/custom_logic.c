@@ -470,6 +470,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     // Если мы НЕ в русском режиме (а мы тут скорее всего не в нем), то переключаем
                     if (!is_russian_lang_active) {
                         switch_lang();              // Переключаем ОС на Русский
+                        wait_ms(150);               // Ждем 0.1 сек, пока Windows переключит раскладку!
                         is_russian_lang_active = true; // Синхронизируем флаг (как в твоих макросах с ударениями)
                         
                         tap_code16(RU_RUBL);        // Печатаем ₽ 
