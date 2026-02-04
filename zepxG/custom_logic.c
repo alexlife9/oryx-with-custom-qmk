@@ -40,47 +40,48 @@ static uint16_t splash_timer = 0;     // Таймер
 static uint8_t center_x = 0;          // Координата X нажатия
 static uint8_t center_y = 0;          // Координата Y нажатия
 
-// === ЭФФЕКТ КАПЛИ (REACTIVE WIDE) - КУБИЧЕСКОЕ ЗАТУХАНИЕ ===
-// Исправленная версия: убраны зависимости, вызывавшие ошибки компиляции.
+// === ЭФФЕКТ "БУМЕРАНГ": ГАСНЕТ В НОЛЬ, ПОТОМ РАЗГОРАЕТСЯ ОБРАТНО ===
 void user_render_splash_effect(void) {
     // Если эффекта нет - выходим
     if (active_splash_led == -1) return;
 
-    // Настройки
-    uint32_t duration = 400;     // Длительность (мс)
-    uint32_t radius = 25;        // Радиус пятна
+    // Общая длительность эффекта (увеличил, т.к. теперь два цикла)
+    uint16_t duration = 500; 
+    uint8_t radius = 25; 
 
-    uint32_t elapsed = timer_elapsed(splash_timer);
+    uint16_t elapsed = timer_elapsed(splash_timer);
 
     if (elapsed < duration) {
-        // === КУБИЧЕСКОЕ ЗАТУХАНИЕ ===
-        // Яркость падает не линейно, а по кривой.
-        // Это делает исчезновение более естественным для глаза.
-        uint32_t remaining = duration - elapsed;
-        
-        // Формула: (остаток^3 / время^3) * 255
-        // Используем 32-битные числа, чтобы избежать переполнения при умножении
-        uint32_t math_brightness = (remaining * remaining * remaining * 255) / (duration * duration * duration);
-        uint8_t brightness = (uint8_t)math_brightness;
+        uint8_t brightness;
+        uint16_t half_duration = duration / 2;
 
-        // Рисуем
+        // === РАСЧЕТ ЯРКОСТИ (V-образная кривая) ===
+        if (elapsed < half_duration) {
+            // ПЕРВАЯ ПОЛОВИНА: Затухаем от 255 до 0
+            // Приводим к uint32_t перед умножением, чтобы не было переполнения
+            brightness = ((uint32_t)255 * (half_duration - elapsed)) / half_duration;
+        } else {
+            // ВТОРАЯ ПОЛОВИНА: Разгораемся от 0 до 255
+            uint16_t elapsed_part2 = elapsed - half_duration;
+            brightness = ((uint32_t)255 * elapsed_part2) / half_duration;
+        }
+
+        // === ОТРИСОВКА ===
         for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
-            // Оптимизация: проверяем координаты
             uint8_t x = g_led_config.point[i].x;
             uint8_t y = g_led_config.point[i].y;
 
-            // Быстрый расчет дистанции (без корней)
+            // Расчет дистанции
             int dist_x = abs(x - center_x);
             int dist_y = abs(y - center_y);
 
             if (dist_x + dist_y < radius) {
-                // Просто ставим цвет с рассчитанной яркостью.
-                // Это 100% рабочий метод без лишних зависимостей.
+                // Рисуем белым с текущей яркостью маятника
                 rgb_matrix_set_color(i, brightness, brightness, brightness);
             }
         }
     } else {
-        // Время вышло - отключаем эффект
+        // Время вышло - выключаем эффект
         active_splash_led = -1;
     }
 }
