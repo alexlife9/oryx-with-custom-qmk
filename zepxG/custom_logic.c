@@ -7,7 +7,7 @@ void user_render_splash_effect(void);
 
 */
 
-/* ==2== найти (строка 200) rgb_matrix_indicators_user и внизу после 'default:' добавить это:
+/* ==2== найти (строка 220) rgb_matrix_indicators_user и внизу после 'default:' добавить это:
       default:
         if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
           rgb_matrix_set_color_all(0, 0, 0);
