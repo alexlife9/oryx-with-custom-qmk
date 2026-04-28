@@ -2,7 +2,7 @@
 #define RGB_MATRIX_VAL_STEP 24
 
 #define USB_SUSPEND_WAKEUP_DELAY 0
-#define SERIAL_NUMBER "zepxG/pj6ODd"
+#define SERIAL_NUMBER "zepxG/Vq70DY"
 #define LAYER_STATE_8BIT
 #define COMBO_COUNT 21
 
