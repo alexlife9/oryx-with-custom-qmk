@@ -19,7 +19,7 @@ void user_render_splash_effect(void);
   user_render_splash_effect();
 
   return true;
-
+}
 */
 
 /* ==3== найти (строка 360) bool process_record_user и добавить:
