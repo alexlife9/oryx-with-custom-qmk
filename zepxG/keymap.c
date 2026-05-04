@@ -6,6 +6,7 @@
 #define ZSA_SAFE_RANGE SAFE_RANGE
 #endif
 void user_render_splash_effect(void);
+
 enum custom_keycodes {
   RGB_SLD = ZSA_SAFE_RANGE,
   ST_MACRO_0,
@@ -354,6 +355,7 @@ tap_dance_action_t tap_dance_actions[] = {
 #include "custom_logic.c"                                            // перед строкой
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
     if (!process_record_custom(keycode, record)) { return false; }   // после строки
+    
   switch (keycode) {
   case QK_MODS ... QK_MODS_MAX:
     // Mouse and consumer keys (volume, media) with modifiers work inconsistently across operating systems,

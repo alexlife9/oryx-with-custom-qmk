@@ -521,6 +521,19 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
             // Для Английского слоя (1)
             return true;
 
+        // === Фикс запятой для цифрового блока (Numpad) ===
+        case KC_KP_COMMA:
+            if (record->event.pressed) {
+                // Если Windows сейчас в русском режиме (например, если вы переключили его вручную)
+                if (is_russian_lang_active) {
+                    tap_code16(RU_COMM);  // Печатаем русскую запятую (по факту это Shift + /)
+                } 
+                // Если Windows в английском режиме (как и задумано вашим скриптом для слоя 2)
+                else {
+                    tap_code16(KC_COMMA); // Печатаем обычную английскую запятую
+                }
+            }
+            return false; // Блокируем стандартный "пустой" код KC_KP_COMMA
         // печатаем 'ú-у́' в зависимости от слоя из которого пришли 
         case ST_MACRO_10: // слой [3]: строка 2, столбец 4
         if (record->event.pressed) {
