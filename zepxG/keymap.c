@@ -41,7 +41,7 @@ enum tap_dance_codes {
   DANCE_2,
 };
 
-#define DUAL_FUNC_0 LT(2, KC_Y)
+#define DUAL_FUNC_0 LT(9, KC_F19)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_moonlander(
@@ -65,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRANSPARENT, TD(DANCE_2),    KC_KP_7,        KC_KP_8,        KC_KP_9,        KC_LCBR,        KC_SCLN,                                        KC_COLN,        KC_RCBR,        KC_HOME,        KC_UP,          KC_END,         KC_CIRC,        KC_TRANSPARENT, 
     KC_KP_PLUS,     KC_KP_0,        KC_KP_4,        KC_KP_5,        KC_KP_6,        KC_LBRC,        KC_LPRN,                                                                        KC_RPRN,        KC_RBRC,        KC_LEFT,        KC_DOWN,        KC_RIGHT,       KC_PIPE,        KC_KP_ASTERISK, 
     KC_KP_MINUS,    ST_MACRO_7,     KC_KP_1,        KC_KP_2,        KC_KP_3,        KC_EQUAL,                                       LGUI(KC_D),     ST_MACRO_8,     KC_TILD,        KC_GRAVE,       KC_BSLS,        KC_KP_SLASH,    
-    DUAL_FUNC_0,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_COMMA,       KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_DOT,         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
+    DUAL_FUNC_0,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_KP_COMMA,    KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_KP_DOT,      KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_BSPC,        KC_TRANSPARENT, KC_TRANSPARENT,                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
   ),
   [3] = LAYOUT_moonlander(
@@ -117,7 +117,7 @@ const uint16_t PROGMEM combo18[] = { MT(MOD_LCTL, KC_DELETE), KC_TAB, COMBO_END}
 const uint16_t PROGMEM combo19[] = { KC_KP_8, KC_KP_6, COMBO_END};
 const uint16_t PROGMEM combo20[] = { KC_KP_7, KC_KP_9, COMBO_END};
 const uint16_t PROGMEM combo21[] = { RU_IE, RU_PE, COMBO_END};
-const uint16_t PROGMEM combo22[] = { RU_COMM, MT(MOD_LCTL, KC_DELETE), COMBO_END};
+const uint16_t PROGMEM combo22[] = { KC_KP_9, KC_LBRC, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo0, LCTL(KC_ENTER)),
@@ -142,7 +142,7 @@ combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo19, KC_KP_SLASH),
     COMBO(combo20, KC_BSPC),
     COMBO(combo21, RU_YO),
-    COMBO(combo22, RU_COMM),
+    COMBO(combo22, KC_KP_ASTERISK),
 };
 
 

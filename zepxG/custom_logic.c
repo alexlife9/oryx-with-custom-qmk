@@ -503,12 +503,12 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                 // Если мы на Русском слое (0)
                 if (current_layer == 0) {
                     
-                    // 1. Проверяем, зажаты ли модификаторы (Shift, Ctrl, Alt, GUI)
-                    // Учитываем и обычные зажатия, и "залипающие" (OSM)
+                    // Проверяем, зажат ли Левый или Правый Shift (и обычный, и "залипающий" OSM)
                     uint8_t mods = get_mods() | get_oneshot_mods();
                     
                     // Если зажат ЛЮБОЙ модификатор
-                    if (mods != 0) {
+                    //if (mods != 0) {
+                    if (mods & MOD_MASK_SHIFT) {
                         return true; // Возвращаем true -> QMK напечатает обычную запятую без пробела
                     }
 
