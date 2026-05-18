@@ -42,7 +42,7 @@ enum tap_dance_codes {
   DANCE_2,
 };
 
-#define DUAL_FUNC_0 LT(9, KC_F19)
+#define DUAL_FUNC_0 LT(7, KC_F2)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_moonlander(
@@ -66,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRANSPARENT, TD(DANCE_2),    KC_KP_7,        KC_KP_8,        KC_KP_9,        KC_LCBR,        KC_SCLN,                                        KC_COLN,        KC_RCBR,        KC_HOME,        KC_UP,          KC_END,         KC_CIRC,        KC_TRANSPARENT, 
     KC_KP_PLUS,     KC_KP_0,        KC_KP_4,        KC_KP_5,        KC_KP_6,        KC_LBRC,        KC_LPRN,                                                                        KC_RPRN,        KC_RBRC,        KC_LEFT,        KC_DOWN,        KC_RIGHT,       KC_PIPE,        KC_KP_ASTERISK, 
     KC_KP_MINUS,    ST_MACRO_7,     KC_KP_1,        KC_KP_2,        KC_KP_3,        KC_EQUAL,                                       LGUI(KC_D),     ST_MACRO_8,     KC_TILD,        KC_GRAVE,       KC_BSLS,        KC_KP_SLASH,    
-    DUAL_FUNC_0,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_KP_COMMA,    KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_KP_DOT,      KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
+    DUAL_FUNC_0,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_KP_COMMA,    KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_DOT,         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_BSPC,        KC_TRANSPARENT, KC_TRANSPARENT,                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
   ),
   [3] = LAYOUT_moonlander(
@@ -92,6 +92,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_F2,          KC_LEFT_CTRL,   KC_Z,           KC_X,           KC_C,           KC_V,                                           KC_TILD,        KC_LBRC,        KC_UP,          KC_RBRC,        KC_EQUAL,       KC_F8,          
     KC_I,           KC_N,           KC_B,           KC_M,           KC_LEFT_ALT,    KC_CAPS,                                                                                                        KC_BSPC,        KC_LEFT,        KC_DOWN,        KC_RIGHT,       KC_P,           KC_TRANSPARENT, 
     KC_SPACE,       KC_H,           KC_ENTER,                       KC_F11,         KC_F12,         KC_J
+  ),
+  [6] = LAYOUT_moonlander(
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
+    KC_TRANSPARENT, RU_SHTI,        RU_TSE,         RU_U,           RU_IE,          RU_EF,          KC_TRANSPARENT,                                 KC_TRANSPARENT, RU_E,           RU_GHE,         RU_TE,          RU_EN,          RU_ZE,          KC_TRANSPARENT, 
+    KC_TRANSPARENT, RU_KA,          RU_EM,          RU_VE,          RU_A,           RU_PE,          KC_TRANSPARENT,                                                                 KC_TRANSPARENT, RU_ER,          RU_O,           RU_EL,          RU_DE,          RU_ZHE,         KC_TRANSPARENT, 
+    KC_TRANSPARENT, RU_YA,          RU_CHE,         RU_ES,          RU_I,           RU_YERU,                                        RU_SHA,         RU_SOFT,        RU_BE,          RU_HA,          RU_YU,          KC_TRANSPARENT, 
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
   ),
 };
 
@@ -355,7 +363,7 @@ tap_dance_action_t tap_dance_actions[] = {
 #include "custom_logic.c"                                            // перед строкой
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это оригинальная строка bool process_record_user
     if (!process_record_custom(keycode, record)) { return false; }   // после строки
-    
+
   switch (keycode) {
   case QK_MODS ... QK_MODS_MAX:
     // Mouse and consumer keys (volume, media) with modifiers work inconsistently across operating systems,
