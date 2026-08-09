@@ -32,6 +32,7 @@ enum custom_keycodes {
   ST_MACRO_20,
   ST_MACRO_21,
   ST_MACRO_22,
+  ST_MACRO_23,
 };
 
 
@@ -42,7 +43,7 @@ enum tap_dance_codes {
   DANCE_2,
 };
 
-#define DUAL_FUNC_0 LT(14, KC_T)
+#define DUAL_FUNC_0 LT(2, KC_Y)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_moonlander(
@@ -71,17 +72,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [3] = LAYOUT_moonlander(
     KC_ESCAPE,      KC_F1,          KC_F2,          KC_F3,          KC_F4,          KC_F5,          KC_F6,                                          KC_F7,          KC_F8,          KC_F9,          KC_F10,         KC_F11,         KC_F12,         KC_NO,          
-    KC_NO,          KC_NO,          KC_NO,          ST_MACRO_9,     KC_NO,          ST_MACRO_10,    RU_YO,                                          KC_NO,          ST_MACRO_16,    KC_NO,          RU_SHCH,        KC_NO,          KC_NO,          KC_NO,          
-    KC_NO,          KC_NO,          ST_MACRO_11,    ST_MACRO_12,    ST_MACRO_13,    KC_NO,          KC_NO,                                                                          KC_NO,          KC_NO,          ST_MACRO_17,    KC_NO,          KC_NO,          KC_NO,          KC_NO,          
-    KC_NO,          ST_MACRO_14,    KC_NO,          KC_NO,          KC_NO,          ST_MACRO_15,                                    KC_NO,          RU_HARD,        KC_NO,          KC_NO,          ST_MACRO_18,    KC_NO,          
+    KC_NO,          KC_NO,          KC_NO,          ST_MACRO_9,     KC_NO,          ST_MACRO_10,    RU_YO,                                          KC_NO,          ST_MACRO_16,    ST_MACRO_17,    RU_SHCH,        KC_NO,          KC_NO,          KC_NO,          
+    KC_NO,          KC_NO,          ST_MACRO_11,    ST_MACRO_12,    ST_MACRO_13,    KC_NO,          KC_NO,                                                                          KC_NO,          KC_NO,          ST_MACRO_18,    KC_NO,          KC_NO,          KC_NO,          KC_NO,          
+    KC_NO,          ST_MACRO_14,    KC_NO,          KC_NO,          KC_NO,          ST_MACRO_15,                                    KC_NO,          RU_HARD,        KC_NO,          KC_NO,          ST_MACRO_19,    KC_NO,          
     TO(0),          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_TRANSPARENT, 
     KC_LEFT_SHIFT,  KC_NO,          KC_NO,                          KC_TRANSPARENT, KC_TRANSPARENT, KC_NO
   ),
   [4] = LAYOUT_moonlander(
-    KC_ESCAPE,      RU_NUM,         KC_NO,          ST_MACRO_19,    KC_NO,          KC_LEFT_GUI,    KC_NO,                                          QK_BOOT,        KC_RIGHT_GUI,   QK_AUDIO_OFF,   ST_MACRO_22,    KC_PAUSE,       KC_NO,          KC_TRANSPARENT, 
+    KC_ESCAPE,      RU_NUM,         KC_NO,          ST_MACRO_20,    KC_NO,          KC_LEFT_GUI,    KC_NO,                                          QK_BOOT,        KC_RIGHT_GUI,   QK_AUDIO_OFF,   ST_MACRO_23,    KC_PAUSE,       KC_NO,          KC_TRANSPARENT, 
     KC_NO,          KC_NO,          KC_HOME,        KC_UP,          KC_END,         KC_BSPC,        KC_NO,                                          KC_NO,          KC_RIGHT_SHIFT, QK_AUDIO_ON,    KC_INSERT,      KC_NO,          KC_NO,          RGB_VAI,        
     KC_NO,          KC_LEFT_SHIFT,  KC_LEFT,        KC_DOWN,        KC_RIGHT,       KC_DELETE,      KC_PSCR,                                                                        KC_NO,          KC_RIGHT_CTRL,  KC_NO,          KC_SCRL,        KC_NO,          KC_PAGE_UP,     RGB_VAD,        
-    KC_NO,          KC_LEFT_CTRL,   ST_MACRO_20,    ST_MACRO_21,    KC_NO,          KC_LEFT_ALT,                                    KC_RIGHT_ALT,   KC_HOME,        KC_UP,          KC_END,         KC_PGDN,        KC_NO,          
+    KC_NO,          KC_LEFT_CTRL,   ST_MACRO_21,    ST_MACRO_22,    KC_NO,          KC_LEFT_ALT,                                    KC_RIGHT_ALT,   KC_HOME,        KC_UP,          KC_END,         KC_PGDN,        KC_NO,          
     TO(0),          LCTL(KC_Z),     KC_NO,          KC_NO,          KC_NO,          KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_LEFT,        KC_DOWN,        KC_RIGHT,       KC_TRANSPARENT, KC_TRANSPARENT, 
     LSFT(KC_RIGHT), KC_TRANSPARENT, KC_NO,                          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
   ),
@@ -106,56 +107,58 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 const uint16_t PROGMEM combo0[] = { KC_ENTER, TT(2), COMBO_END};
 const uint16_t PROGMEM combo1[] = { MT(MOD_LCTL, KC_DELETE), KC_BSPC, COMBO_END};
-const uint16_t PROGMEM combo2[] = { RU_SHA, RU_EL, COMBO_END};
-const uint16_t PROGMEM combo3[] = { RU_O, RU_SOFT, COMBO_END};
-const uint16_t PROGMEM combo4[] = { RU_CHE, RU_EM, COMBO_END};
+const uint16_t PROGMEM combo2[] = { RU_IE, RU_PE, COMBO_END};
+const uint16_t PROGMEM combo3[] = { RU_SHA, RU_EL, COMBO_END};
+const uint16_t PROGMEM combo4[] = { RU_O, RU_SOFT, COMBO_END};
 const uint16_t PROGMEM combo5[] = { RU_ER, RU_RPRN, COMBO_END};
 const uint16_t PROGMEM combo6[] = { KC_KP_PLUS, KC_KP_MINUS, COMBO_END};
 const uint16_t PROGMEM combo7[] = { MT(MOD_LCTL, KC_DELETE), KC_SPACE, COMBO_END};
 const uint16_t PROGMEM combo8[] = { RU_EF, MT(MOD_LCTL, KC_DELETE), COMBO_END};
 const uint16_t PROGMEM combo9[] = { MT(MOD_LCTL, KC_DELETE), KC_TAB, COMBO_END};
 const uint16_t PROGMEM combo10[] = { KC_LEFT, KC_RIGHT, COMBO_END};
-const uint16_t PROGMEM combo11[] = { KC_KP_6, KC_KP_4, COMBO_END};
-const uint16_t PROGMEM combo12[] = { RU_A, RU_YERU, COMBO_END};
-const uint16_t PROGMEM combo13[] = { RU_YU, KC_KP_SLASH, COMBO_END};
-const uint16_t PROGMEM combo14[] = { RU_KA, RU_TSE, COMBO_END};
+const uint16_t PROGMEM combo11[] = { RU_YU, KC_KP_SLASH, COMBO_END};
+const uint16_t PROGMEM combo12[] = { RU_KA, RU_TSE, COMBO_END};
+const uint16_t PROGMEM combo13[] = { RU_A, RU_YERU, COMBO_END};
+const uint16_t PROGMEM combo14[] = { RU_CHE, RU_EM, COMBO_END};
 const uint16_t PROGMEM combo15[] = { KC_H, KC_M, COMBO_END};
-const uint16_t PROGMEM combo16[] = { KC_KP_1, KC_KP_3, COMBO_END};
-const uint16_t PROGMEM combo17[] = { KC_KP_SLASH, KC_BSLS, COMBO_END};
-const uint16_t PROGMEM combo18[] = { MT(MOD_LCTL, KC_DELETE), KC_TAB, COMBO_END};
-const uint16_t PROGMEM combo19[] = { KC_KP_8, KC_KP_6, COMBO_END};
-const uint16_t PROGMEM combo20[] = { KC_KP_7, KC_KP_9, COMBO_END};
-const uint16_t PROGMEM combo21[] = { RU_IE, RU_PE, COMBO_END};
-const uint16_t PROGMEM combo22[] = { KC_KP_9, KC_LBRC, COMBO_END};
+const uint16_t PROGMEM combo16[] = { KC_KP_SLASH, KC_BSLS, COMBO_END};
+const uint16_t PROGMEM combo17[] = { KC_KP_7, KC_KP_9, COMBO_END};
+const uint16_t PROGMEM combo18[] = { KC_KP_6, KC_KP_4, COMBO_END};
+const uint16_t PROGMEM combo19[] = { KC_KP_1, KC_KP_3, COMBO_END};
+const uint16_t PROGMEM combo20[] = { KC_KP_9, KC_LBRC, COMBO_END};
+const uint16_t PROGMEM combo21[] = { KC_KP_8, KC_KP_6, COMBO_END};
+const uint16_t PROGMEM combo22[] = { MT(MOD_LCTL, KC_DELETE), KC_TAB, COMBO_END};
 const uint16_t PROGMEM combo23[] = { KC_RIGHT_SHIFT, KC_KP_SLASH, COMBO_END};
 const uint16_t PROGMEM combo24[] = { KC_TAB, RU_SHTI, COMBO_END};
+const uint16_t PROGMEM combo25[] = { KC_KP_8, KC_KP_9, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo0, LCTL(KC_ENTER)),
     COMBO(combo1, LCTL(KC_BSPC)),
-    COMBO(combo2, RU_SHCH),
-    COMBO(combo3, RU_HARD),
-    COMBO(combo4, LCTL(KC_Z)),
+    COMBO(combo2, RU_YO),
+    COMBO(combo3, RU_SHCH),
+    COMBO(combo4, RU_HARD),
     COMBO(combo5, RU_RUBL),
     COMBO(combo6, KC_EQUAL),
     COMBO(combo7, KC_ENTER),
     COMBO(combo8, TO(3)),
     COMBO(combo9, KC_CAPS),
     COMBO(combo10, KC_SPACE),
-    COMBO(combo11, KC_DELETE),
-    COMBO(combo12, KC_DELETE),
-    COMBO(combo13, KC_ENTER),
-    COMBO(combo14, KC_BSPC),
+    COMBO(combo11, KC_ENTER),
+    COMBO(combo12, KC_BSPC),
+    COMBO(combo13, KC_DELETE),
+    COMBO(combo14, LCTL(KC_Z)),
     COMBO(combo15, LCTL(KC_Z)),
-    COMBO(combo16, LCTL(KC_Z)),
-    COMBO(combo17, KC_ENTER),
-    COMBO(combo18, KC_CAPS),
-    COMBO(combo19, KC_KP_SLASH),
-    COMBO(combo20, KC_BSPC),
-    COMBO(combo21, RU_YO),
-    COMBO(combo22, KC_KP_ASTERISK),
+    COMBO(combo16, KC_ENTER),
+    COMBO(combo17, KC_BSPC),
+    COMBO(combo18, KC_DELETE),
+    COMBO(combo19, LCTL(KC_Z)),
+    COMBO(combo20, KC_KP_ASTERISK),
+    COMBO(combo21, KC_KP_SLASH),
+    COMBO(combo22, KC_CAPS),
     COMBO(combo23, KC_ENTER),
     COMBO(combo24, KC_CAPS),
+    COMBO(combo25, KC_COLN),
 };
 
 
@@ -472,30 +475,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это �
     break;
     case ST_MACRO_17:
     if (record->event.pressed) {
-      SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_3) SS_TAP(X_LEFT_ALT) ));
+      SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_6) SS_TAP(X_LEFT_ALT) ));
     }
     break;
     case ST_MACRO_18:
     if (record->event.pressed) {
-      SEND_STRING(SS_LALT(SS_TAP(X_KP_1) SS_TAP(X_KP_1) SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_LEFT_ALT) ));
+      SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_3) SS_TAP(X_LEFT_ALT) ));
     }
     break;
     case ST_MACRO_19:
     if (record->event.pressed) {
-      SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_6) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
+      SEND_STRING(SS_LALT(SS_TAP(X_KP_1) SS_TAP(X_KP_1) SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_LEFT_ALT) ));
     }
     break;
     case ST_MACRO_20:
     if (record->event.pressed) {
-      SEND_STRING(SS_TAP(X_D)  SS_DELAY(100) SS_TAP(X_ENTER));
+      SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_6) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
     }
     break;
     case ST_MACRO_21:
     if (record->event.pressed) {
-      SEND_STRING(SS_TAP(X_MINUS)  SS_DELAY(100) SS_TAP(X_ENTER));
+      SEND_STRING(SS_TAP(X_D)  SS_DELAY(100) SS_TAP(X_ENTER));
     }
     break;
     case ST_MACRO_22:
+    if (record->event.pressed) {
+      SEND_STRING(SS_TAP(X_MINUS)  SS_DELAY(100) SS_TAP(X_ENTER));
+    }
+    break;
+    case ST_MACRO_23:
     if (record->event.pressed) {
       SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_9) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
     }

@@ -1,7 +1,7 @@
+#define RU_YO KC_GRV
 #define RU_SHCH KC_O
 #define RU_HARD KC_RBRC
 #define RU_RUBL ALGR(KC_8)
-#define RU_YO KC_GRV
 #define RU_PERC S(KC_5)
 #define RU_EXLM S(KC_1)
 #define RU_SHTI KC_Q
