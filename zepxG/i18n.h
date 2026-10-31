@@ -43,3 +43,4 @@
 #define RU_YU KC_DOT
 #define RU_DOT KC_SLSH
 #define RU_NUM S(KC_3)
+#define RU_RUBL ALGR(KC_8)
