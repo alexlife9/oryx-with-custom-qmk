@@ -34,7 +34,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {    // это �
 #include "quantum.h" // Для get_highest_layer, layer_state_t
 #include "timer.h"   // Для timer_read и timer_elapsed
 
-// === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ (ПОЛИФОНИЯ) ===
+// === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
 #define MAX_SPLASHES 5 // Сколько эффектов может гореть одновременно
 
 typedef struct {
@@ -104,9 +104,6 @@ static bool is_russian_lang_active = true;
 
 #define CUSTOM_TAPPING_TERM 180 // Настраиваемый тайм-аут
 
-// Переменные для обработки двойного клика KC_DQUO: "␣"
-static uint16_t dquo_timer = 0;
-
 // Переменные для обработки двойного клика KC_LPRN: (␣)
 static uint16_t lprn_timer = 0;
 
@@ -165,7 +162,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Логика переключения языка теперь полностью в layer_state_set_user, так что здесь только управление слоями.
 bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
-// 1. ЛОВИМ КООРДИНАТЫ ДЛЯ ЭФФЕКТА (ПОЛИФОНИЯ)
+// Эффекты капли при нажатии клавиш
     if (record->event.pressed) {
         uint8_t row = record->event.key.row;
         uint8_t col = record->event.key.col;
@@ -185,128 +182,77 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
     switch (keycode) {
 
-        // Кавычки " с двойным кликом на рус слое
-        case RU_DQUO:
-            if (get_highest_layer(layer_state) != 0) {
-                return true; // На других слоях не работаем
-            }
-            if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие " совсем недавно.
-                if (timer_elapsed(dquo_timer) < CUSTOM_TAPPING_TERM) {
-                    // ДА, это двойное нажатие.
-                    // "Исправляем" предыдущее действие.
-                    tap_code16(RU_DQUO);   // печатаем вторую кавычку
-                    tap_code16(KC_LEFT);   // и ставим курсор внутри
 
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
-                    dquo_timer = 0;
-                } else {
-                    // НЕТ, это одиночное нажатие.
-                    // Действуем немедленно.
-                    tap_code16(RU_DQUO); // Печатаем "
-
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
-                    dquo_timer = timer_read();
-                }
-            }
-            return false;
-
-        // Кавычки " с двойным кликом на англ слое
-        case KC_DQUO:
-            if (get_highest_layer(layer_state) != 1 && get_highest_layer(layer_state) != 2) {
-                return true; // На других слоях не работаем
-            }
-            if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие " совсем недавно.
-                if (timer_elapsed(dquo_timer) < CUSTOM_TAPPING_TERM) {
-                    // ДА, это двойное нажатие.
-                    // "Исправляем" предыдущее действие.
-                    tap_code(KC_BSPC);                  // 1. Стираем "
-                    SEND_STRING("\"\"" SS_TAP(X_LEFT)); // 2. печатаем "" и ставим курсор внутри
-
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
-                    dquo_timer = 0;
-                } else {
-                    // НЕТ, это одиночное нажатие.
-                    // Действуем немедленно.
-                    tap_code16(KC_DQUO); // Печатаем "
-
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
-                    dquo_timer = timer_read();
-                }
-            }
-            return false;
-
-        // Скобка "(" с двойным кликом
+        // Скобка "(" по двойному клику превращается в "()" и ставит курсор внутрь
         case KC_LPRN:
             if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие '(' совсем недавно.
+                // Проверяем, было ли предыдущее нажатие '(' совсем недавно
                 if (timer_elapsed(lprn_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем (
                     SEND_STRING("()"SS_TAP(X_LEFT));  // 2. Печатаем () и ставим курсор внутрь
 
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась
                     lprn_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
                     tap_code16(KC_LPRN); // Печатаем '('
 
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие
                     lprn_timer = timer_read();
                 }
             }
             return false;
 
-        // Скобка "{" с двойным кликом
+        // Скобка "{" по двойному клику превращается в "{}" и ставит курсор внутрь
         case KC_LCBR:
             if (get_highest_layer(layer_state) != 2) {
                 return true; // На других слоях не работаем
             }
             if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие '[' совсем недавно.
+                // Проверяем, было ли предыдущее нажатие '{' совсем недавно
                 if (timer_elapsed(lcbr_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем {
                     SEND_STRING("{}"SS_TAP(X_LEFT));  // 2. Печатаем {} и ставим курсор внутрь
 
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась
                     lcbr_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
                     tap_code16(KC_LCBR); // Печатаем '{'
 
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие
                     lcbr_timer = timer_read();
                 }
             }
             return false;
 
-        // Скобка "[" с двойным кликом
+        // Скобка "[" по двойныму клику превращается в "[]" и ставит курсор внутрь
         case KC_LBRC:
             if (get_highest_layer(layer_state) != 2) {
                 return true; // На других слоях не работаем
             }
             if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие '[' совсем недавно.
+                // Проверяем, было ли предыдущее нажатие '[' совсем недавно
                 if (timer_elapsed(lbrc_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем [
                     SEND_STRING("[]"SS_TAP(X_LEFT));  // 2. Печатаем [] и ставим курсор внутрь
 
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась
                     lbrc_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
                     tap_code(KC_LBRC); // Печатаем '['
 
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие
                     lbrc_timer = timer_read();
                 }
             }
@@ -315,7 +261,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         // Скобка угловая для комментария в РНР '<' с двойным кликом для <!-- -->
         case KC_LABK:
             if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие '<' совсем недавно.
+                // Проверяем, было ли предыдущее нажатие '<' совсем недавно
                 if (timer_elapsed(labk_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
@@ -326,14 +272,14 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                         SS_LALT(SS_TAP(X_KP_6) SS_TAP(X_KP_2) SS_TAP(X_LEFT_ALT) )
                         SS_TAP(X_LEFT) SS_TAP(X_LEFT) SS_TAP(X_LEFT)); // 2. Печатаем <!-- --> и ставим курсор внутрь
 
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась
                     labk_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
                     SEND_STRING(SS_LALT(SS_TAP(X_KP_6) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) )); // Печатаем '<'
 
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие
                     labk_timer = timer_read();
                 }
             }
@@ -342,21 +288,21 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         // Звездочка '*' '•' с двойным кликом
         case KC_KP_ASTERISK:
             if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие '*' совсем недавно.
+                // Проверяем, было ли предыдущее нажатие '*' совсем недавно
                 if (timer_elapsed(asterisk_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие.
                     tap_code(KC_BSPC);                // 1. Стираем '*'
                     SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_4) SS_TAP(X_KP_9) SS_TAP(X_LEFT_ALT) )); // 2. Печатаем '•'
 
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась
                     asterisk_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
                     tap_code(KC_KP_ASTERISK); // Печатаем '*'
 
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие
                     asterisk_timer = timer_read();
                 }
             }
@@ -365,21 +311,21 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
         // Среднее тире '–' по двойныму клику
         case KC_KP_MINUS:
             if (record->event.pressed) {
-                // Проверяем, было ли предыдущее нажатие '-' совсем недавно.
+                // Проверяем, было ли предыдущее нажатие '-' совсем недавно
                 if (timer_elapsed(minus_timer) < CUSTOM_TAPPING_TERM) {
                     // ДА, это двойное нажатие.
                     // "Исправляем" предыдущее действие:
                     tap_code(KC_BSPC);                // 1. Стираем '-'
                     SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_5) SS_TAP(X_KP_0) SS_TAP(X_LEFT_ALT) )); // 2. Печатаем '–'
 
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась
                     minus_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
                     tap_code(KC_KP_MINUS); // Печатаем '-'
 
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие
                     minus_timer = timer_read();
                 }
             }
@@ -394,20 +340,20 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     // Сразу добавляем копирование:
                     tap_code16(LCTL(KC_C));
 
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась
                     ctlkca_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
                     tap_code16(LCTL(KC_A)); // выполняем LCTL(KC_A)
 
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие
                     ctlkca_timer = timer_read();
                 }
             }
             return false;
 
-        // Замена # на № с двойным кликом
+/*     // Замена # на № с двойным кликом в русском слое, в англ слое и цифровом
         case ST_MACRO_0:
             if (record->event.pressed) {
 
@@ -418,14 +364,52 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     tap_code(KC_BSPC);  // стираем '#'
                     tap_code16(RU_NUM); // и печатаем '№'
 
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась
                     ctlkca_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
                     SEND_STRING(SS_LALT(SS_TAP(X_KP_3) SS_TAP(X_KP_5) SS_TAP(X_LEFT_ALT))); // печатаем '#'
 
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие
+                    ctlkca_timer = timer_read();
+                }
+            }
+            return false;
+*/
+
+        // Замена # на № с двойным кликом в русском слое, в англ слое и цифровом
+        case ST_MACRO_0:
+            if (record->event.pressed) {
+
+                // Проверяем, было ли предыдущее нажатие
+                if (timer_elapsed(ctlkca_timer) < CUSTOM_TAPPING_TERM) {
+                    // ДА, это двойное нажатие.
+                    // "Исправляем" предыдущее действие:
+                    tap_code(KC_BSPC);  // стираем '#'
+
+                    if (!is_russian_lang_active) {
+                        switch_lang();                  // Переключаем ОС на Русский
+                        wait_ms(150);                   // Ждем, пока Windows переключит раскладку
+                        is_russian_lang_active = true;  // Синхронизируем флаг
+
+                        tap_code16(RU_NUM);             // Печатаем №
+
+                        switch_lang();                  // Возвращаем ОС на Английский
+                        wait_ms(150);                   // Ждем возврата раскладки
+                        is_russian_lang_active = false; // Возвращаем флаг обратно
+                    } else {
+                        tap_code16(RU_NUM);             // Язык уже русский, просто печатаем №
+                    }
+
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась
+                    ctlkca_timer = 0;
+                } else {
+                    // НЕТ, это одиночное нажатие.
+                    // Действуем немедленно.
+                    SEND_STRING(SS_LALT(SS_TAP(X_KP_3) SS_TAP(X_KP_5) SS_TAP(X_LEFT_ALT))); // печатаем '#'
+
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие
                     ctlkca_timer = timer_read();
                 }
             }
@@ -442,14 +426,14 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
                     tap_code(KC_BSPC);  // стираем '$'
                     tap_code16(RU_RUBL); // и печатаем '₽'
 
-                    // Сбрасываем таймер, чтобы последовательность не продолжилась.
+                    // Сбрасываем таймер, чтобы последовательность не продолжилась
                     ctlkca_timer = 0;
                 } else {
                     // НЕТ, это одиночное нажатие.
                     // Действуем немедленно.
                     SEND_STRING(SS_LALT(SS_TAP(X_KP_3) SS_TAP(X_KP_6) SS_TAP(X_LEFT_ALT) )); // печатаем '$'
 
-                    // Запускаем таймер, чтобы отследить возможное второе нажатие.
+                    // Запускаем таймер, чтобы отследить возможное второе нажатие
                     ctlkca_timer = timer_read();
                 }
             }
@@ -666,7 +650,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
         // 5. печатаем 'ó-ó' в зависимости от слоя из которого пришли (Alt + 0243)
         // SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_3) SS_TAP(X_LEFT_ALT) ));
-        case ST_MACRO_17: // слой [3] (правая часть): строка 3, столбец 3
+        case ST_MACRO_18: // слой [3] (правая часть): строка 3, столбец 3
         if (record->event.pressed) {
             // Работаем только на 3-м слое
             if (get_highest_layer(layer_state) == 3) {
@@ -758,7 +742,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
         // 8. печатаем 'ю́' (Unicode U+0301)
         // SEND_STRING(SS_LALT(SS_TAP(X_KP_PLUS) SS_TAP(X_KP_0) SS_TAP(X_KP_3) SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT) ));
-        case ST_MACRO_18: // слой [3] (правая часть): строка 4, столбец 5
+        case ST_MACRO_19: // слой [3] (правая часть): строка 4, столбец 5
             if (record->event.pressed) {
 
                 // Проверяем, что мы ТОЧНО на 3-м слое
@@ -785,7 +769,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
         // Обработка ñ/Ñ в зависимости от Caps Lock 'ñ'(Alt + 0241) - 'Ñ'(Alt + 0209)
         // SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_1) SS_TAP(X_LEFT_ALT)));
-        case ST_MACRO_16:
+        case ST_MACRO_16: // слой [3] (правая часть): строка 2, столбец 2
             if (record->event.pressed) {
                 
                 // Проверяем, включен ли светодиод Caps Lock
