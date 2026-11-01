@@ -650,7 +650,7 @@ bool process_record_custom(uint16_t keycode, keyrecord_t *record) {
 
         // 5. печатаем 'ó-ó' в зависимости от слоя из которого пришли (Alt + 0243)
         // SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_3) SS_TAP(X_LEFT_ALT) ));
-        case ST_MACRO_18: // слой [3] (правая часть): строка 3, столбец 3 тест
+        case ST_MACRO_18: // слой [3] (правая часть): строка 3, столбец 3
         if (record->event.pressed) {
             // Работаем только на 3-м слое
             if (get_highest_layer(layer_state) == 3) {
